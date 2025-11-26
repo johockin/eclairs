@@ -18,6 +18,7 @@ const syllableData = [
   { syllable: 'une', weight: 5 },
   { syllable: 'et', weight: 5 },
   { syllable: 'les', weight: 5 },
+  { syllable: 'é', weight: 5 },   // Accent aigu - very common
 
   // HIGH FREQUENCY (4x) - Essential pronouns and function words
   { syllable: 'me', weight: 4 },
@@ -27,6 +28,10 @@ const syllableData = [
   { syllable: 'que', weight: 4 },
   { syllable: 'pour', weight: 4 },
   { syllable: 'sur', weight: 4 },
+  { syllable: 'été', weight: 4 },  // Common word ending
+  { syllable: 'és', weight: 4 },   // Plural ending
+  { syllable: 'ée', weight: 4 },   // Feminine ending
+  { syllable: 'ées', weight: 4 },  // Feminine plural
 
   // COMMON (3x) - Possessives and basic words
   { syllable: 'ma', weight: 3 },
@@ -40,6 +45,7 @@ const syllableData = [
   { syllable: 'est', weight: 3 },
   { syllable: 'dans', weight: 3 },
   { syllable: 'avec', weight: 3 },
+  { syllable: 'très', weight: 3 }, // Very common word
 
   // COMMON (3x) - Essential digraphs for CP
   { syllable: 'on', weight: 3 },
@@ -50,6 +56,29 @@ const syllableData = [
   { syllable: 'ai', weight: 3 },
   { syllable: 'au', weight: 3 },
   { syllable: 'eau', weight: 3 },
+  { syllable: 'è', weight: 3 },    // Accent grave
+  { syllable: 'ê', weight: 3 },    // Accent circonflexe
+  { syllable: 'où', weight: 3 },   // Where (accented)
+  { syllable: 'à', weight: 3 },    // Preposition
+
+  // COMMON (3x) - Accented syllables
+  { syllable: 'bé', weight: 3 },
+  { syllable: 'cé', weight: 3 },
+  { syllable: 'dé', weight: 3 },
+  { syllable: 'fé', weight: 3 },
+  { syllable: 'lé', weight: 3 },
+  { syllable: 'mé', weight: 3 },
+  { syllable: 'né', weight: 3 },
+  { syllable: 'pé', weight: 3 },
+  { syllable: 'ré', weight: 3 },
+  { syllable: 'sé', weight: 3 },
+  { syllable: 'té', weight: 3 },
+  { syllable: 'vé', weight: 3 },
+
+  // COMMON (3x) - È syllables (mère, père, etc.)
+  { syllable: 'mè', weight: 3 },
+  { syllable: 'pè', weight: 3 },
+  { syllable: 'frè', weight: 3 },
 
   // COMMON (3x) - P family (Block 2)
   { syllable: 'pa', weight: 3 },
@@ -94,6 +123,7 @@ const syllableData = [
   { syllable: 'ca', weight: 2 },
   { syllable: 'co', weight: 2 },
   { syllable: 'cu', weight: 2 },
+  { syllable: 'ça', weight: 2 },   // C cédille
 
   // MODERATE (2x) - N family (Block 2)
   { syllable: 'na', weight: 2 },
@@ -120,12 +150,20 @@ const syllableData = [
   { syllable: 'vo', weight: 2 },
   { syllable: 'vu', weight: 2 },
 
+  // MODERATE (2x) - More accented vowels
+  { syllable: 'î', weight: 2 },    // î as in île
+  { syllable: 'ô', weight: 2 },    // ô as in hôtel
+  { syllable: 'û', weight: 2 },    // û as in sûr
+  { syllable: 'ï', weight: 2 },    // ï as in naïf
+  { syllable: 'ë', weight: 2 },    // ë as in Noël
+
   // LESS COMMON (1x) - G family (Block 3)
   { syllable: 'ga', weight: 1 },
   { syllable: 'ge', weight: 1 },
   { syllable: 'gi', weight: 1 },
   { syllable: 'go', weight: 1 },
   { syllable: 'gu', weight: 1 },
+  { syllable: 'gé', weight: 1 },
 
   // LESS COMMON (1x) - J family (Block 3)
   { syllable: 'ja', weight: 1 },
@@ -140,6 +178,7 @@ const syllableData = [
   { syllable: 'chi', weight: 1 },
   { syllable: 'cho', weight: 1 },
   { syllable: 'chu', weight: 1 },
+  { syllable: 'ché', weight: 1 },
 
   // LESS COMMON (1x) - Other common patterns
   { syllable: 'oi', weight: 1 },
@@ -151,6 +190,12 @@ const syllableData = [
   { syllable: 'or', weight: 1 },
   { syllable: 'ir', weight: 1 },
   { syllable: 'ur', weight: 1 },
+
+  // LESS COMMON (1x) - Ê patterns (fête, tête, etc.)
+  { syllable: 'fê', weight: 1 },
+  { syllable: 'tê', weight: 1 },
+  { syllable: 'bê', weight: 1 },
+  { syllable: 'rê', weight: 1 },
 ];
 
 // Build weighted array (syllables appear multiple times based on weight)
