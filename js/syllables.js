@@ -150,12 +150,10 @@ const syllableData = [
   { syllable: 'vo', weight: 2 },
   { syllable: 'vu', weight: 2 },
 
-  // MODERATE (2x) - More accented vowels
+  // MODERATE (2x) - Circonflexe vowels (common in children's texts)
   { syllable: 'î', weight: 2 },    // î as in île
   { syllable: 'ô', weight: 2 },    // ô as in hôtel
   { syllable: 'û', weight: 2 },    // û as in sûr
-  { syllable: 'ï', weight: 2 },    // ï as in naïf
-  { syllable: 'ë', weight: 2 },    // ë as in Noël
 
   // LESS COMMON (1x) - G family (Block 3)
   { syllable: 'ga', weight: 1 },
