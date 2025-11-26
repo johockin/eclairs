@@ -1,0 +1,14 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Keep dropbox folder but ignore contents
+_dropbox/*
+!_dropbox/.gitkeep
