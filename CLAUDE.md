@@ -168,6 +168,27 @@ python -m http.server 8000
   - Dynamic theme-color for mobile browser chrome
 - **Status**: Phase 1B complete, opened in browser for testing
 
+### 2025-11-25 (Syllable Data Rebuild)
+- **Claude Instance**: Claude Opus 4.5
+- **Issue**: Original syllable data had accents stripped and included unverified content
+- **Action**: Complete rebuild from verified French phonics sources
+- **Sources Used**:
+  - French 36 phonemes (CCFS Sorbonne)
+  - French CP curriculum phonics progression
+  - French phonics teaching resources (sons simples + complexes)
+- **New Structure**:
+  - Simple vowels: a, e, i, o, u
+  - Accented vowels: é, è, ê (only these three - verified)
+  - Complex sounds (sons complexes): ou, on, an, en, in, oi, ai, au, eau, eu, ch, gn, ui, oin
+  - CV syllables by consonant family (la/le/li/lo/lu, ma/me/mi/mo/mu, etc.)
+  - Common word endings: er, es, et, ez, ir, tion
+  - High-frequency function words: un, les, des, est, et, il
+- **Removed**:
+  - Multi-syllable words (avec, dans, pour, très - not syllables)
+  - Rare tréma characters (ë, ï - only in Noël, naïf)
+  - Unverified accented combinations
+- **Status**: Pushed to GitHub
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
