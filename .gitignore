@@ -9,6 +9,19 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Xcode user-specific files
+*.xcuserstate
+xcuserdata/
+
+# Claude Code local settings
+.claude/settings.local.json
+.claude/skills/
+
+# Ralph logs
+.ralph/logs/*
+!.ralph/logs/.gitkeep
+_logs/
+
 # Keep dropbox folder but ignore contents
 _dropbox/*
 !_dropbox/.gitkeep

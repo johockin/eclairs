@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="Éclairs - French phonics flashcards for kids">
+  <meta name="theme-color" content="#E6E6FA">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Éclairs</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ HOME SCREEN ============ -->
+  <div class="screen active" id="screen-home">
+    <div class="home-container">
+      <h1 class="home-title">Éclairs</h1>
+      <p class="home-subtitle">French Phonics Practice</p>
+
+      <div class="home-buttons">
+        <button class="home-btn home-btn-primary" data-nav="free">
+          <span class="home-btn-icon">✦</span>
+          <span>Free Practice</span>
+        </button>
+        <button class="home-btn home-btn-scored" data-nav="practice">
+          <span class="home-btn-icon">★</span>
+          <span>Scored Practice</span>
+        </button>
+        <button class="home-btn home-btn-stats" data-nav="stats">
+          <span class="home-btn-icon">▣</span>
+          <span>Stats</span>
+        </button>
+        <button class="home-btn home-btn-config" data-nav="config">
+          <span class="home-btn-icon">⚙</span>
+          <span>Practice Items</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FREE PRACTICE ============ -->
+  <div class="screen" id="screen-free">
+    <button class="back-btn" data-nav="home">← Back</button>
+    <div class="practice-container">
+      <div class="syllable-display" id="free-syllable">le</div>
+      <p class="tap-hint">Tap anywhere for next</p>
+    </div>
+  </div>
+
+  <!-- ============ SCORED PRACTICE ============ -->
+  <div class="screen" id="screen-practice">
+    <button class="back-btn" data-nav="home">← Back</button>
+    <div class="practice-container">
+      <div class="syllable-display" id="practice-syllable">b</div>
+      <div id="practice-feedback" class="feedback-flash"></div>
+      <div class="score-buttons">
+        <button class="score-btn score-wrong" id="btn-wrong" aria-label="Wrong">
+          <span class="score-icon">✗</span>
+        </button>
+        <button class="score-btn score-correct" id="btn-correct" aria-label="Correct">
+          <span class="score-icon">✓</span>
+        </button>
+      </div>
+      <div class="session-counter" id="practice-counter">Ready!</div>
+    </div>
+  </div>
+
+  <!-- ============ CONFIG SCREEN ============ -->
+  <div class="screen" id="screen-config">
+    <div class="config-container">
+      <div class="config-header">
+        <button class="back-btn" data-nav="home">← Back</button>
+        <h2 class="config-title">Practice Items</h2>
+      </div>
+
+      <div class="config-actions">
+        <button class="config-action-btn" id="btn-config-all">All</button>
+        <button class="config-action-btn" id="btn-config-clear">None</button>
+        <button class="config-action-btn" id="btn-config-reset">Defaults</button>
+      </div>
+
+      <div id="config-list" class="config-list"></div>
+      <div id="config-message" class="config-message"></div>
+
+      <button class="save-btn" id="btn-config-save">Save & Go Back</button>
+    </div>
+  </div>
+
+  <!-- ============ STATS SCREEN ============ -->
+  <div class="screen" id="screen-stats">
+    <div class="stats-container">
+      <div class="stats-header">
+        <button class="back-btn" data-nav="home">← Back</button>
+        <h2 class="stats-title">Player Stats</h2>
+      </div>
+      <div id="stats-content" class="stats-content"></div>
+    </div>
+  </div>
+
+  <script src="js/syllables.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

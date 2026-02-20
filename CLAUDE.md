@@ -189,6 +189,49 @@ python -m http.server 8000
   - Unverified accented combinations
 - **Status**: Pushed to GitHub
 
+### 2026-02-19 (Major Feature Build: Scored Practice + Stats + iOS App)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Designed and built scored practice mode with checkmark/X buttons
+  2. Built Web Audio API sound effects engine (1 correct chime, 8 comical wrong sounds cycled)
+  3. Built localStorage stats engine with NBA-style time windows (Career, 30d, 7d, Today)
+  4. Created curated practice item catalog: mirror letters (b/d/p/q), similar letters (m/n), nasal vowels, digraphs, accents, hard/soft C/G
+  5. Built multi-screen SPA (Home, Free Practice, Scored Practice, Config, Stats)
+  6. Created config screen for toggling practice items on/off
+  7. Converted project to Xcode iOS app (SwiftUI + WKWebView wrapper)
+  8. Generated project.pbxproj, Swift files, Assets.xcassets
+  9. Moved web files from root to Eclairs/Web/ (Xcode bundle structure)
+  10. Created .ralph/ documentation structure (PROMPT.md, fix_plan.md, AGENT.md, .ralphrc)
+- **Files Created**:
+  - `Eclairs/Web/index.html` - Multi-screen SPA shell
+  - `Eclairs/Web/css/style.css` - Full styles for all screens
+  - `Eclairs/Web/js/app.js` - Main app logic, routing, all screens
+  - `Eclairs/Web/js/syllables.js` - Syllable data + PracticeItems catalog
+  - `Eclairs/Web/js/sounds.js` - Web Audio API sound effects
+  - `Eclairs/Web/js/storage.js` - localStorage stats engine
+  - `Eclairs/EclairsApp.swift` - SwiftUI app entry point
+  - `Eclairs/ContentView.swift` - Main view
+  - `Eclairs/WebView.swift` - WKWebView UIViewRepresentable
+  - `Eclairs.xcodeproj/project.pbxproj` - Xcode project
+  - `Eclairs/Assets.xcassets/` - Asset catalog
+  - `.ralph/PROMPT.md`, `.ralph/fix_plan.md`, `.ralph/AGENT.md`, `.ralphrc`
+- **Files Removed**:
+  - Root-level `index.html`, `css/style.css`, `js/app.js`, `js/syllables.js`
+- **Result**: Working prototype ready for Xcode testing
+- **Status**: Phase 1 complete, ready for Phase 2 (testing & polish)
+
+### 2026-02-19 (Xcode Project Opened & Configured)
+- **Claude Instance**: Claude Opus 4
+- **Action**: User opened Eclairs.xcodeproj in Xcode; Xcode auto-configured project settings
+- **Changes by Xcode**:
+  - Added DEVELOPMENT_TEAM (Y3A9DG75S4)
+  - Added CLANG_WARN_* flags (standard warnings)
+  - Added ENABLE_APP_SANDBOX, ENABLE_HARDENED_RUNTIME
+  - Added app category (public.app-category.education)
+  - Added macOS to SUPPORTED_PLATFORMS
+  - Updated LastUpgradeCheck to 2620
+- **Status**: Project builds in Xcode, ready for simulator testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -198,34 +241,34 @@ python -m http.server 8000
 
 ## DEVELOPMENT ROADMAP
 
-### Current Status: **Phase 1A** - Foundation
+### Current Status: **Phase 2** - Testing & Polish
 
-**See PRD.md for detailed phases and requirements.**
+**See .ralph/fix_plan.md for detailed task checklist.**
 
-### Phase 0: Setup
-- [x] Receive and review PRD
-- [x] Create initial file structure
-- [ ] Begin Phase 1 implementation
+### Phase 1: Core Prototype [COMPLETE]
+- [x] Multi-screen SPA (Home, Free Practice, Scored Practice, Config, Stats)
+- [x] Scored practice mode with checkmark/X buttons + sound effects
+- [x] Web Audio API sound effects (1 correct chime, 8 comical wrong sounds)
+- [x] localStorage stats engine with NBA-style time windows
+- [x] Config screen for selecting practice items
+- [x] Curated practice item catalog with difficulty categories
+- [x] Xcode project with WKWebView wrapper
 
-### Phase 1A: Foundation
-- [x] Research French syllable frequency data (Manulex/Lexique 3)
-- [x] Create weighted syllable array (js/syllables.js)
-- [x] Validate/fix color palette for accessibility (WCAG AA)
-- [x] User decisions on open questions
+### Phase 2: Testing & Polish [CURRENT]
+- [ ] Test in Xcode Simulator
+- [ ] Verify sound effects in WKWebView
+- [ ] Test localStorage persistence
+- [ ] UI polish and animation refinement
+- [ ] Safe area verification on notched iPhones
 
-### Phase 1B: Core Build
-- [x] Create index.html
-- [x] Implement style.css (mobile-first)
-- [x] Build app.js with tap-to-advance + repeat prevention
+### Phase 3: Stats & Thresholds
+- [ ] Mastery threshold system
+- [ ] Weighted practice selection (struggling items appear more)
+- [ ] Session summary
 
-### Phase 1C: Mobile Polish
-- [ ] Test iOS Safari
-- [ ] Test Chrome Android
-- [ ] Verify tap targets
-
-### Phase 1D: Deploy
-- [ ] Deploy to Netlify
-- [ ] Final QA
+### Phase 4: Release Prep
+- [ ] App icon, launch screen
+- [ ] TestFlight build
 
 ---
 
@@ -280,21 +323,26 @@ Find working example in codebase → Compare → Apply working pattern
 ## CURRENT STATUS
 
 ### Production Status
-- **Architecture**: Pure vanilla HTML/CSS/JS
-- **Performance**: Zero dependencies, instant loading
-- **State**: PRD received, architecture reviewed
+- **Architecture**: iOS app (SwiftUI + WKWebView) wrapping vanilla HTML/CSS/JS
+- **Performance**: Zero dependencies, local bundle, instant loading
+- **State**: Phase 1 prototype complete, ready for Xcode testing
 
 ### Key Files
-- `index.html` - Main page (TO CREATE)
-- `css/style.css` - Styling (TO CREATE)
-- `js/app.js` - Application logic (TO CREATE)
-- `js/syllables.js` - Weighted syllable data (TO CREATE)
-- `PRD.md` - Product requirements (EXISTS)
+- `Eclairs/Web/index.html` - Multi-screen SPA shell
+- `Eclairs/Web/css/style.css` - All styles
+- `Eclairs/Web/js/app.js` - Main app logic
+- `Eclairs/Web/js/syllables.js` - Syllable data + practice items
+- `Eclairs/Web/js/sounds.js` - Sound effects engine
+- `Eclairs/Web/js/storage.js` - Stats & storage engine
+- `Eclairs/*.swift` - iOS wrapper (3 files)
+- `Eclairs.xcodeproj/` - Xcode project
+- `.ralph/` - Ralph development documentation
 
 ### Next Priority
-1. User decisions on open questions (colors, interaction, offline)
-2. Syllable frequency research
-3. Begin core implementation
+1. Open Eclairs.xcodeproj in Xcode and test on Simulator
+2. Verify sound effects work in WKWebView
+3. Test localStorage persistence across app launches
+4. UI polish based on testing feedback
 
 ---
 
@@ -304,20 +352,34 @@ Every file in this project is documented. Here's the complete map:
 
 ```
 CLAUDE.md (this file) ─────────────────── THE HUB
-├── PRD.md ◄─────────────────────────────── Product requirements (EXISTS)
+├── PRD.md ◄─────────────────────────────── Product requirements
 ├── HISTORY.md ◄─────────────────────────── Archived action logs
 ├── TROUBLESHOOTING.md ◄─────────────────── Problem→solution reference
 │
-├── /css/ ◄──────────────────────────────── Styling
-│   └── style.css ────────────────────────── Core styles
+├── Eclairs.xcodeproj/ ◄────────────────── Xcode project
+│   └── project.pbxproj
 │
-├── /js/ ◄───────────────────────────────── JavaScript
-│   ├── app.js ───────────────────────────── Application logic
-│   └── syllables.js ─────────────────────── Weighted syllable data
+├── Eclairs/ ◄───────────────────────────── Xcode target folder
+│   ├── EclairsApp.swift ─────────────────── App entry point
+│   ├── ContentView.swift ────────────────── Main SwiftUI view
+│   ├── WebView.swift ────────────────────── WKWebView wrapper
+│   ├── Assets.xcassets/ ─────────────────── Asset catalog
+│   └── Web/ ◄───────────────────────────── Bundled web app
+│       ├── index.html ───────────────────── Multi-screen SPA shell
+│       ├── css/style.css ────────────────── All styles
+│       └── js/
+│           ├── app.js ───────────────────── Main app logic & routing
+│           ├── syllables.js ─────────────── Syllable data + practice items
+│           ├── sounds.js ────────────────── Web Audio API sound effects
+│           └── storage.js ───────────────── localStorage stats engine
 │
+├── .ralph/ ◄────────────────────────────── Ralph development docs
+│   ├── PROMPT.md ────────────────────────── Development instructions
+│   ├── fix_plan.md ──────────────────────── Task checklist
+│   └── AGENT.md ─────────────────────────── Build/run commands
+│
+├── .ralphrc ◄───────────────────────────── Ralph config
 ├── /_dropbox/ ◄─────────────────────────── **DROP FILES HERE** for Claude to find
-│
-└── index.html ◄─────────────────────────── Main page
 ```
 
 ---
