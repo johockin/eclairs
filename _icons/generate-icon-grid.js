@@ -42,49 +42,38 @@ function newCanvas(bgColor) {
 /**
  * Draw a lowercase "e" shape using canvas paths.
  * cx, cy = center of the letter
- * size = overall height of the letter body
+ * size = overall diameter of the letter body
  * thickness = stroke weight
+ *
+ * Refined approach: draw the "e" as a thick arc (not a full circle cutout).
+ * The letter is an open ring (~300 degrees) with a horizontal crossbar.
  */
 function drawLetterE(ctx, cx, cy, size, thickness, color) {
   var r = size / 2; // outer radius
-  var ri = r - thickness; // inner radius
-
-  ctx.fillStyle = color;
-
-  // The "e" is: an almost-full circle (open at bottom-right) with a horizontal crossbar
-  // Approach: draw outer circle, cut out inner circle (donut), then add crossbar, cut opening
+  var midR = r - thickness / 2; // center of the stroke
 
   ctx.save();
   ctx.translate(cx, cy);
 
-  // Outer filled circle
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineCap = 'round';
+  ctx.lineWidth = thickness;
 
-  // Cut out inner circle (creates the ring)
-  ctx.save();
-  ctx.globalCompositeOperation = 'destination-out';
+  // Main body: arc from about 25 degrees (opening) around to about 345 degrees
+  // The opening faces bottom-right
+  var openAngle = 0.45; // radians — size of the gap (~26 degrees)
   ctx.beginPath();
-  ctx.arc(0, 0, ri, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
+  ctx.arc(0, 0, midR, openAngle, Math.PI * 2 - 0.05);
+  ctx.stroke();
 
-  // Add the horizontal crossbar (fills the middle)
+  // Crossbar: horizontal line across the middle
+  ctx.lineCap = 'butt';
+  ctx.lineWidth = thickness * 0.9;
   ctx.beginPath();
-  ctx.rect(-r, -thickness / 2, r * 2, thickness);
-  ctx.fill();
-
-  // Cut the opening at bottom-right (about 4 o'clock to 2 o'clock... actually just a wedge)
-  // The opening is roughly from 0° to 50° (bottom-right gap)
-  ctx.save();
-  ctx.globalCompositeOperation = 'destination-out';
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.arc(0, 0, r + 4, 0.15, 0.85);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
+  ctx.moveTo(-r + thickness * 0.3, 0);
+  ctx.lineTo(r - thickness * 0.1, 0);
+  ctx.stroke();
 
   ctx.restore();
 }
@@ -94,25 +83,21 @@ function drawLetterE(ctx, cx, cy, size, thickness, color) {
  * cx, cy = center position of the accent
  * length = length of the accent stroke
  * thickness = width of the stroke
- * angle = rotation in radians (positive = tilted right)
  */
 function drawAccent(ctx, cx, cy, length, thickness, color) {
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(0.35); // ~20 degrees tilted right
 
-  // Simple rounded rectangle for the accent stroke
-  var hw = thickness / 2;
-  var hl = length / 2;
+  // Clean rounded line
+  ctx.strokeStyle = color;
+  ctx.lineCap = 'round';
+  ctx.lineWidth = thickness;
   ctx.beginPath();
-  ctx.moveTo(-hw, -hl);
-  ctx.lineTo(hw, -hl);
-  ctx.lineTo(hw + 8, hl); // slightly wider at bottom
-  ctx.lineTo(-hw + 8, hl);
-  ctx.closePath();
+  ctx.moveTo(0, -length / 2);
+  ctx.lineTo(0, length / 2);
+  ctx.stroke();
 
-  ctx.fillStyle = color;
-  ctx.fill();
   ctx.restore();
 }
 
@@ -716,6 +701,156 @@ function r2_le_dark() {
 }
 
 
+// ============ ROUND 3: REFINED BOLT — FAT, ROUND, GOLDEN RATIO ============
+// Feedback: bolts need to be fatter and rounder. "Perfect golden ratio vibe."
+// Accent contenders stay exactly as-is. Iconic simplicity, mot juste.
+
+/**
+ * Draw a refined lightning bolt — fat, rounded, harmonious.
+ * cx, cy = center of bolt
+ * scale = 1.0 produces a bolt ~680px tall
+ * The shape uses rounded joins and balanced proportions:
+ *   - Upper "arm" is wider and shorter (golden ratio: lower section ~1.618x upper)
+ *   - The notch/waist is thick, not pinched
+ *   - All corners are generously rounded via thick stroke
+ */
+function drawBoltRefined(ctx, cx, cy, scale, color) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  if (scale !== 1) ctx.scale(scale, scale);
+
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
+  // Fat, balanced bolt silhouette
+  // Upper section: wide arm pointing right, ~260px tall
+  // Lower section: longer tail pointing down-left, ~420px tall (~1.6x upper)
+  // The "waist" where they meet is thick (~200px wide)
+  ctx.beginPath();
+
+  // Start top-left of upper arm
+  ctx.moveTo(-120, -340);
+  // Top edge, wide
+  ctx.lineTo(160, -340);
+  // Down to the notch — this is the right edge of the upper arm
+  // The notch sits at about -80 (not at center — shifted up for golden ratio)
+  ctx.lineTo(80, -80);
+  // Right point of the notch (the bump-out that gives the zigzag)
+  ctx.lineTo(190, -80);
+  // The bolt's bottom tip — this is the drama
+  ctx.lineTo(-30, 340);
+  // Back up to the notch's lower-left — forms the lower arm
+  ctx.lineTo(60, 60);
+  // Left side of the lower portion, back to start
+  ctx.lineTo(-140, 60);
+
+  ctx.closePath();
+
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  // Fat rounded stroke to soften all corners
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 40;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+// --- Round 3: Standalone bolt, 3 colorways ---
+
+function r3_bolt_lavender() {
+  var c = newCanvas('#D8D0F0');
+  var ctx = c.ctx;
+
+  ctx.shadowColor = 'rgba(50, 10, 80, 0.22)';
+  ctx.shadowBlur = 44;
+  ctx.shadowOffsetY = 16;
+
+  drawBoltRefined(ctx, CENTER, CENTER, 1.0, '#4A148C');
+  return c.canvas;
+}
+
+function r3_bolt_coral() {
+  var c = newCanvas('#E8453C');
+  var ctx = c.ctx;
+
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.18)';
+  ctx.shadowBlur = 40;
+  ctx.shadowOffsetY = 14;
+
+  drawBoltRefined(ctx, CENTER, CENTER, 1.0, '#FFF8E8');
+  return c.canvas;
+}
+
+function r3_bolt_dark() {
+  var c = newCanvas('#1A1A2E');
+  var ctx = c.ctx;
+
+  ctx.shadowColor = 'rgba(200, 140, 255, 0.5)';
+  ctx.shadowBlur = 50;
+  ctx.shadowOffsetY = 0;
+
+  drawBoltRefined(ctx, CENTER, CENTER, 1.0, '#CE93D8');
+  return c.canvas;
+}
+
+// --- Round 3: "lé" fusion with refined bolt ---
+
+function r3_le_lavender() {
+  var c = newCanvas('#D8D0F0');
+  var ctx = c.ctx;
+  var color = '#4A148C';
+
+  ctx.shadowColor = 'rgba(50, 10, 80, 0.2)';
+  ctx.shadowBlur = 30;
+  ctx.shadowOffsetY = 12;
+
+  // Bolt as "l" — shifted left, slightly smaller
+  drawBoltRefined(ctx, CENTER - 120, CENTER, 0.78, color);
+
+  // "é" to the right — clear of the bolt
+  ctx.shadowColor = 'transparent';
+  drawAccentedE(ctx, CENTER + 175, CENTER + 50, 1.5, color);
+
+  return c.canvas;
+}
+
+function r3_le_coral() {
+  var c = newCanvas('#E8453C');
+  var ctx = c.ctx;
+  var color = '#FFF8E8';
+
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+  ctx.shadowBlur = 30;
+  ctx.shadowOffsetY = 12;
+
+  drawBoltRefined(ctx, CENTER - 120, CENTER, 0.78, color);
+
+  ctx.shadowColor = 'transparent';
+  drawAccentedE(ctx, CENTER + 175, CENTER + 50, 1.5, color);
+
+  return c.canvas;
+}
+
+function r3_le_dark() {
+  var c = newCanvas('#1A1A2E');
+  var ctx = c.ctx;
+  var color = '#CE93D8';
+
+  ctx.shadowColor = 'rgba(200, 140, 255, 0.35)';
+  ctx.shadowBlur = 40;
+  ctx.shadowOffsetY = 0;
+
+  drawBoltRefined(ctx, CENTER - 120, CENTER, 0.78, color);
+
+  ctx.shadowColor = 'transparent';
+  drawAccentedE(ctx, CENTER + 175, CENTER + 50, 1.5, color);
+
+  return c.canvas;
+}
+
+
 // ============ GENERATE ALL + HTML ============
 
 async function main() {
@@ -750,7 +885,21 @@ async function main() {
     { name: 'r2-le-dark', label: 'Bolt + é = "lé" on dark navy', fn: r2_le_dark },
   ];
 
-  var all = [].concat(contenders, round1_history, round2_bolt, round2_le);
+  // --- Round 3: Refined bolt (fat, rounded, golden ratio) ---
+  var round3_bolt = [
+    { name: 'r3-bolt-lavender', label: 'Fat rounded bolt on lavender', fn: r3_bolt_lavender },
+    { name: 'r3-bolt-coral', label: 'Fat rounded bolt on coral', fn: r3_bolt_coral },
+    { name: 'r3-bolt-dark', label: 'Fat rounded bolt on dark navy', fn: r3_bolt_dark },
+  ];
+
+  // --- Round 3: "lé" fusion with refined bolt ---
+  var round3_le = [
+    { name: 'r3-le-lavender', label: 'Refined bolt + é = "lé" on lavender', fn: r3_le_lavender },
+    { name: 'r3-le-coral', label: 'Refined bolt + é = "lé" on coral', fn: r3_le_coral },
+    { name: 'r3-le-dark', label: 'Refined bolt + é = "lé" on dark navy', fn: r3_le_dark },
+  ];
+
+  var all = [].concat(contenders, round3_bolt, round3_le, round2_bolt, round2_le, round1_history);
 
   for (var i = 0; i < all.length; i++) {
     var v = all[i];
@@ -776,9 +925,11 @@ async function main() {
   }
 
   var secContenders = contenders.map(cardHtml).join('\n');
-  var secR1 = round1_history.map(cardHtml).join('\n');
+  var secR3Bolt = round3_bolt.map(cardHtml).join('\n');
+  var secR3Le = round3_le.map(cardHtml).join('\n');
   var secR2Bolt = round2_bolt.map(cardHtml).join('\n');
   var secR2Le = round2_le.map(cardHtml).join('\n');
+  var secR1 = round1_history.map(cardHtml).join('\n');
 
   var html = '<!DOCTYPE html>\n<html><head>\n' +
     '<meta charset="UTF-8">\n' +
@@ -790,6 +941,7 @@ async function main() {
     '  .subtitle { font-size: 14px; color: #666; margin-bottom: 32px; }\n' +
     '  h2 { font-size: 18px; color: #888; margin: 32px 0 16px; padding-top: 24px; border-top: 1px solid #333; }\n' +
     '  h2.contender { color: #4ED45A; }\n' +
+    '  h2.current { color: #FFA726; }\n' +
     '  h2.history { color: #555; }\n' +
     '  .grid { display: flex; gap: 24px; flex-wrap: wrap; }\n' +
     '  .card { background: #222; border-radius: 16px; padding: 20px; width: 220px; }\n' +
@@ -804,14 +956,18 @@ async function main() {
     '  .size span { font-size: 10px; color: #555; }\n' +
     '</style>\n</head><body>\n' +
     '<h1>Éclairs — Icon Grid</h1>\n' +
-    '<p class="subtitle">Round 2: Bolt refinement + "lé" fusion. C accent marks are contenders.</p>\n' +
+    '<p class="subtitle">Round 3: Fat, rounded bolt with golden ratio proportions. Accent contenders unchanged.</p>\n' +
     '<h2 class="contender">Contenders (Accent Mark — from Round 1)</h2>\n' +
     '<div class="grid">' + secContenders + '</div>\n' +
-    '<h2>Round 2 — A: Bolt Refinement</h2>\n' +
+    '<h2 class="current">Round 3 — A: Refined Bolt (Fat + Rounded)</h2>\n' +
+    '<div class="grid">' + secR3Bolt + '</div>\n' +
+    '<h2 class="current">Round 3 — D: Refined "lé" Fusion</h2>\n' +
+    '<div class="grid">' + secR3Le + '</div>\n' +
+    '<h2 class="history">Round 2 History — Bolt Refinement</h2>\n' +
     '<div class="grid">' + secR2Bolt + '</div>\n' +
-    '<h2>Round 2 — D: Lightning Bolt + é = "lé"</h2>\n' +
+    '<h2 class="history">Round 2 History — "lé" Fusion</h2>\n' +
     '<div class="grid">' + secR2Le + '</div>\n' +
-    '<h2 class="history">Round 1 History — A: Original Bolts</h2>\n' +
+    '<h2 class="history">Round 1 History — Original Bolts</h2>\n' +
     '<div class="grid">' + secR1 + '</div>\n' +
     '</body></html>';
 
