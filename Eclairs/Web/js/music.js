@@ -1,9 +1,8 @@
 /**
  * Éclairs - Background Music Engine
- * Three selectable chiptune loops, all Web Audio API synthesized
- * Song 1: Bouncy C major (Excite Bike-inspired) with CR-78 drums
- * Song 2: Minor key, slower, sadder but still bouncy
- * Song 3: Shuffly jazz (Steely Dan "Peg"-inspired groove)
+ * Six selectable chiptune loops, all Web Audio API synthesized
+ * Phonics: Bouncy (C maj riff), Mellow (D maj dreamy), Jazzy (Eb maj swing)
+ * Numbers: Calculator (Bb maj staccato), Abacus (A pentatonic), Clockwork (E min mechanical)
  */
 
 var MusicEngine = (function() {
@@ -34,29 +33,39 @@ var MusicEngine = (function() {
   // ============================================================
 
   var songs = [
-    // --- SONG 0: BOUNCY (C major, 140 BPM, Excite Bike vibe) ---
+    // ============================================================
+    // PHONICS SONGS (0-2) — playful, letter-learning energy
+    // ============================================================
+
+    // --- SONG 0: BOUNCY (C major, 140 BPM) ---
+    // Energetic 2-note riff motif, call-and-response, NOT arpeggios
+    // Think: a catchy repeated hook with rhythmic punch
     {
       name: 'Bouncy',
       bpm: 140,
       steps: 64,
       swing: 0,
       melody: [
-        n.E4, R, n.G4, n.C5,  R, n.E5, n.D5, R,   n.C5, R, n.G4, R,   n.E4, R, n.G4, R,
-        R, n.A4, R, n.C5,     n.E5, R, n.D5, R,    n.C5, n.A4, R, n.G4,R, R, R, R,
-        n.G4, R, n.C5, n.E5,  R, n.G5, n.E5, R,    n.D5, R, n.C5, R,   n.A4, R, n.C5, R,
-        R, n.G4, R, n.A4,     n.C5, R, n.D5, n.C5, R, n.G4, R, n.E4,   R, R, R, R
+        // Bar 1 — punchy two-note riff: G-C, G-C, then answer phrase
+        n.G4, R, n.C5, R,     n.G4, R, n.C5, R,    R, n.D5, n.E5, R,   n.D5, R, R, R,
+        // Bar 2 — syncopated response: pushes off-beat
+        R, R, n.E5, R,        n.D5, n.C5, R, R,    n.G4, R, R, n.A4,   R, R, R, R,
+        // Bar 3 — higher energy: repeating E then leap down
+        n.E5, R, n.E5, R,     n.E5, n.D5, R, n.C5, R, n.A4, R, R,     n.G4, R, n.A4, R,
+        // Bar 4 — build: stepwise climb then drop
+        n.C5, R, n.D5, R,     n.E5, R, n.G5, R,    n.E5, R, R, n.C5,  R, R, R, R
       ],
       accents: [
-        1,0,0,1, 0,1,0,0,  1,0,0,0, 1,0,0,0,
-        0,1,0,1, 1,0,0,0,  1,0,0,1, 0,0,0,0,
-        1,0,1,1, 0,1,0,0,  1,0,0,0, 1,0,0,0,
-        0,1,0,1, 1,0,1,1,  0,0,0,1, 0,0,0,0
+        1,0,1,0, 1,0,1,0,  0,1,1,0, 1,0,0,0,
+        0,0,1,0, 1,1,0,0,  1,0,0,1, 0,0,0,0,
+        1,0,1,0, 1,1,0,1,  0,1,0,0, 1,0,1,0,
+        1,0,1,0, 1,0,1,0,  1,0,0,1, 0,0,0,0
       ],
       bass: [
-        n.C3,0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0,
+        n.C3,0,0,0, 0,0,0,0,  n.C3,0,0,0, 0,0,0,0,
         n.A3,0,0,0, 0,0,0,0,  n.E3,0,0,0, 0,0,0,0,
-        n.C3,0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0
+        n.C3,0,0,0, 0,0,0,0,  n.F3,0,0,0, 0,0,0,0,
+        n.G3,0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0
       ],
       hat: [
         1, 0, .5, 0,  1, 0, .5, 0,   1, 0, .5, 0,  1, 0, .5, 0,
@@ -64,12 +73,11 @@ var MusicEngine = (function() {
         1, 0, .5, 0,  1, 0, .5, 0,   1, 0, .5, 0,  1, 0, .5, 0,
         1, 0, .5, 0,  1, 0, .5, 0,   1, 0, .5, 0,  .3,0, .3, 0
       ],
-      // CR-78 style: open hat on off-beats, ride on quarters
       openHat: [
-        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,1,0,
+        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,0,0,
         0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,0,0,
         0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,1,0,
-        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,0,0
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
       ],
       ride: [
         1, 0, 0, 0,  1, 0, 0, 0,   1, 0, 0, 0,  1, 0, 0, 0,
@@ -87,151 +95,163 @@ var MusicEngine = (function() {
       filterFreq: 2200
     },
 
-    // --- SONG 1: MINOR KEY (A minor, 118 BPM, sadder but bouncy) ---
+    // --- SONG 1: MELLOW (D major, 92 BPM) ---
+    // Sparse, dreamy, long tones with space — lullaby-like
+    // Mostly half-note and quarter-note rhythms, wide intervals, lots of rests
     {
       name: 'Mellow',
-      bpm: 118,
+      bpm: 92,
       steps: 64,
       swing: 0,
       melody: [
-        // Bar 1 — descending minor arpeggio, melancholy
-        n.E5, R, n.C5, R,     n.A4, R, n.E4, R,    n.A4, R, n.C5, R,   n.B4, R, R, R,
-        // Bar 2 — syncopated sighing phrase
-        R, n.D5, R, n.C5,     n.A4, R, R, n.G4,    n.A4, R, n.E4, R,   R, R, R, R,
-        // Bar 3 — reaching upward, then falling
-        n.E4, R, n.A4, n.C5,  R, n.E5, n.D5, R,    n.C5, R, n.B4, R,   n.A4, R, n.G4, R,
-        // Bar 4 — resolution, gentle landing
-        R, n.A4, R, n.E4,     n.F4, R, n.E4, R,    n.D4, R, R, n.E4,   R, R, R, R
+        // Bar 1 — single long note, then space, then gentle answer
+        n.D5, R, R, R,        R, R, R, R,          n.A4, R, R, R,      R, R, R, R,
+        // Bar 2 — one note, pause, two-note sigh
+        n.Fs4,R, R, R,        R, R, R, R,          R, R, n.G4, R,      n.Fs4,R, R, R,
+        // Bar 3 — slightly more motion: three notes spread out
+        n.B4, R, R, R,        n.A4, R, R, R,       R, R, n.Fs4,R,      R, R, R, R,
+        // Bar 4 — resolve: one sustained note, then echo
+        n.D5, R, R, R,        R, R, R, R,          R, R, R, R,         n.A4, R, R, R
       ],
       accents: [
-        1,0,0,0, 1,0,0,0,  1,0,0,0, 1,0,0,0,
-        0,1,0,1, 1,0,0,0,  1,0,0,0, 0,0,0,0,
-        1,0,1,1, 0,1,0,0,  1,0,1,0, 1,0,0,0,
-        0,1,0,1, 1,0,0,0,  1,0,0,1, 0,0,0,0
+        1,0,0,0, 0,0,0,0,  1,0,0,0, 0,0,0,0,
+        1,0,0,0, 0,0,0,0,  0,0,1,0, 1,0,0,0,
+        1,0,0,0, 1,0,0,0,  0,0,1,0, 0,0,0,0,
+        1,0,0,0, 0,0,0,0,  0,0,0,0, 1,0,0,0
       ],
       bass: [
-        n.A3,0,0,0, 0,0,0,0,   n.E3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,   n.E3,0,0,0, 0,0,0,0,
+        n.D3,0,0,0, 0,0,0,0,   0,0,0,0,   0,0,0,0,
         n.A3,0,0,0, 0,0,0,0,   n.G3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,   n.E3,0,0,0, 0,0,0,0
+        n.G3,0,0,0, 0,0,0,0,   n.D3,0,0,0, 0,0,0,0,
+        n.D3,0,0,0, 0,0,0,0,   n.A3,0,0,0, 0,0,0,0
       ],
+      // Very sparse drums — just gentle kick on 1 and ghost hat
       hat: [
-        1, 0, .4, 0,  1, 0, .4, 0,   1, 0, .4, 0,  1, 0, .4, 0,
-        1, 0, .4, 0,  1, 0, .4, 0,   1, 0, .4, 0,  .2,0, .2, 0,
-        1, 0, .4, 0,  1, 0, .4, 0,   1, 0, .4, 0,  1, 0, .4, 0,
-        1, 0, .4, 0,  1, 0, .4, 0,   1, 0, .4, 0,  .2,0, .2, 0
+        .3, 0, 0, 0,  0, 0, 0, 0,  .3, 0, 0, 0,  0, 0, 0, 0,
+        .3, 0, 0, 0,  0, 0, 0, 0,  .3, 0, 0, 0,  0, 0, 0, 0,
+        .3, 0, 0, 0,  0, 0, 0, 0,  .3, 0, 0, 0,  0, 0, 0, 0,
+        .3, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,   .3, 0, 0, 0
       ],
       openHat: [
-        0,0,0,0, 0,0,.7,0,  0,0,0,0, 0,0,0,0,
-        0,0,0,0, 0,0,.7,0,  0,0,0,0, 0,0,0,0,
-        0,0,0,0, 0,0,.7,0,  0,0,0,0, 0,0,.7,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
+      ],
+      ride: [
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
+      ],
+      kick: [
+        1, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0,
+        1, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0,
+        1, 0, 0, 0,  0, 0, 0, 0,   .5,0, 0, 0,  0, 0, 0, 0,
+        1, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0
+      ],
+      leadType: 'triangle',
+      filterFreq: 1600
+    },
+
+    // --- SONG 2: JAZZY (Eb major, 108 BPM, swing) ---
+    // Chromatic passing tones, bebop-flavored, walking bass feel
+    // Key: Eb — completely different harmonic color from C and D
+    {
+      name: 'Jazzy',
+      bpm: 108,
+      steps: 64,
+      swing: 0.14,
+      melody: [
+        // Bar 1 — chromatic approach: D→Eb, then skip up to Bb
+        n.D4, R, n.Eb4,R,     R, R, n.Bb4,R,       R, n.Ab4,R, R,      n.G4, R, R, R,
+        // Bar 2 — bluesy bend: Gb(Fs)→G→Bb, laid back
+        R, n.Fs4,R, n.G4,     R, R, n.Bb4,R,       n.Ab4,R, R, n.G4,   R, R, R, R,
+        // Bar 3 — higher register, syncopated hits
+        R, R, n.Bb4,R,        n.C5, R, R, n.Eb5,   R, n.D5, R, R,      n.Bb4,R, R, R,
+        // Bar 4 — descending chromatic resolution
+        n.C5, R, n.B4, R,     n.Bb4,R, n.Ab4,R,    n.G4, R, R, R,      R, R, R, R
+      ],
+      accents: [
+        1,0,1,0, 0,0,1,0,  0,1,0,0, 1,0,0,0,
+        0,1,0,1, 0,0,1,0,  1,0,0,1, 0,0,0,0,
+        0,0,1,0, 1,0,0,1,  0,1,0,0, 1,0,0,0,
+        1,0,1,0, 1,0,1,0,  1,0,0,0, 0,0,0,0
+      ],
+      bass: [
+        n.Eb3,0,0,0, 0,0,0,0,  n.Bb3,0,0,0, 0,0,0,0,
+        n.Ab3,0,0,0, 0,0,0,0,  n.Eb3,0,0,0, 0,0,0,0,
+        n.Ab3,0,0,0, 0,0,0,0,  n.Bb3,0,0,0, 0,0,0,0,
+        n.Ab3,0,0,0, 0,0,n.G3,0,n.Eb3,0,0,0, 0,0,0,0
+      ],
+      hat: [
+        .7, 0, .3, .2,  .7, 0, .3, .2,  .7, 0, .3, .2,  .7, 0, .3, .2,
+        .7, 0, .3, .2,  .7, 0, .3, .2,  .7, 0, .3, .2,  .4, 0, .2, 0,
+        .7, 0, .3, .2,  .7, 0, .3, .2,  .7, 0, .3, .2,  .7, 0, .3, .2,
+        .7, 0, .3, .2,  .7, 0, .3, .2,  .7, 0, .3, .2,  .4, 0, .2, 0
+      ],
+      openHat: [
+        0,0,0,0, 0,0,.8,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,.8,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,.8,0,  0,0,0,0, 0,0,.8,0,
         0,0,0,0, 0,0,0,0,   0,0,0,0, 0,0,0,0
       ],
       ride: [
-        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
-        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
-        .6,0,0,0, .6,0,0,0,  .6,0,0,0, .6,0,0,0,
-        .6,0,0,0, .6,0,0,0,  .6,0,0,0, 0,0,0,0
+        1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,
+        1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,
+        1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,
+        1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0,  1, 0, .4, 0
       ],
       kick: [
-        1, 0, 0, 0,  0, 0, 0, 0,   1, 0, 0, 0,  0, 0,.3, 0,
-        1, 0, 0, 0,  0, 0, 0, 0,   1, 0, 0, 0,  0, 0, 0, 0,
-        1, 0, 0, 0,  0, 0,.3, 0,   1, 0, 0, 0,  0, 0,.3, 0,
-        1, 0, 0, 0,  0, 0, 0, 0,   1, 0, 0, 0,  0, 0, 0, 0
-      ],
-      leadType: 'triangle',
-      filterFreq: 1800
-    },
-
-    // --- SONG 2: JAZZ SHUFFLE (G major, 115 BPM, Peg-inspired) ---
-    // Chromatic walkdowns, plagal cadences, swing 16ths
-    {
-      name: 'Jazzy',
-      bpm: 115,
-      steps: 64,
-      swing: 0.12,  // swing offset for shuffle feel
-      melody: [
-        // Bar 1 — Gmaj9 arpeggio with chromatic passing tones
-        n.B4, R, n.D5, n.Fs5,  R, n.G5, n.Fs5, R,   n.E5, R, n.D5, R,   n.B4, R, n.A4, R,
-        // Bar 2 — walkdown: F#→F→E, syncopated
-        R, n.Fs4, R, n.A4,     n.D5, R, n.C5, R,     n.E4, n.G4, R, n.B4, R, R, R, R,
-        // Bar 3 — Cmaj7→G resolution, bouncy
-        n.G4, R, n.B4, n.D5,   R, n.E5, n.D5, R,     n.C5, R, n.A4, R,   n.G4, R, n.Fs4, R,
-        // Bar 4 — Am7→D7 turnaround
-        R, n.A4, R, n.C5,      n.E5, R, n.D5, n.Fs5, R, n.D5, R, n.B4,   R, R, R, R
-      ],
-      accents: [
-        1,0,0,1, 0,1,0,0,  1,0,0,0, 0,0,1,0,
-        0,1,0,1, 1,0,0,0,  1,0,0,1, 0,0,0,0,
-        1,0,1,1, 0,1,0,0,  1,0,1,0, 0,0,1,0,
-        0,1,0,1, 1,0,1,1,  0,0,0,1, 0,0,0,0
-      ],
-      bass: [
-        n.G3,0,0,0, 0,0,0,0,   n.Fs3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,   n.E3,0,0,0, 0,0,0,0,
-        n.C3,0,0,0, 0,0,0,0,   n.G3,0,0,0, 0,0,0,0,
-        n.A3,0,0,0, 0,0,0,0,   n.D3,0,0,0, 0,0,0,0
-      ],
-      // Shuffle hats: busier, ghosty
-      hat: [
-        1, 0, .6, .3,  1, 0, .6, .3,  1, 0, .6, .3,  1, 0, .6, .3,
-        1, 0, .6, .3,  1, 0, .6, .3,  1, 0, .6, .3,  .5, 0, .3, 0,
-        1, 0, .6, .3,  1, 0, .6, .3,  1, 0, .6, .3,  1, 0, .6, .3,
-        1, 0, .6, .3,  1, 0, .6, .3,  1, 0, .6, .3,  .5, 0, .3, 0
-      ],
-      openHat: [
-        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,1,0,
-        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,0,0,
-        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,1,0,
-        0,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,0,0
-      ],
-      // Ride bell on all quarters — jazzy shimmer
-      ride: [
-        1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,
-        1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,
-        1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,
-        1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0,  1, 0, .5, 0
-      ],
-      // Kick: syncopated, jazzy
-      kick: [
-        1, 0, 0, 0,  0, 0, 0, 0,   .5,0, 0, 0,  0, 0,.4, 0,
+        1, 0, 0, 0,  0, 0, 0, 0,   .4,0, 0, 0,  0, 0,.3, 0,
         1, 0, 0, 0,  0, 0,.3, 0,   1, 0, 0, 0,  0, 0, 0, 0,
-        1, 0, 0, 0,  0, 0, 0, 0,   .5,0, 0, 0,  0, 0,.4, 0,
+        1, 0, 0, 0,  0, 0, 0, 0,   .4,0, 0, 0,  0, 0,.3, 0,
         1, 0, 0, 0,  0, 0,.3, 0,   1, 0, 0, 0,  0, 0, 0, 0
       ],
       leadType: 'square',
-      filterFreq: 2500
+      filterFreq: 2000
     },
 
-    // --- SONG 3: CALCULATOR (C major, 125 BPM, clean sine/triangle, music box) ---
+    // ============================================================
+    // NUMBERS SONGS (3-5) — distinctly different character
+    // ============================================================
+
+    // --- SONG 3: CALCULATOR (Bb major, 132 BPM) ---
+    // Staccato, mathematical: repeated notes, perfect 4th/5th intervals
+    // Short punchy hits like button presses — NOT arpeggios
     {
       name: 'Calculator',
-      bpm: 125,
+      bpm: 132,
       steps: 64,
       swing: 0,
       melody: [
-        n.C5, R, n.E5, R,     n.G5, R, n.E5, R,    n.C5, R, n.D5, R,   n.E5, R, R, R,
-        R, n.D5, R, n.F5,     n.E5, R, n.C5, R,    n.G4, R, n.A4, R,   n.C5, R, R, R,
-        n.E5, R, n.G5, R,     n.A5, R, n.G5, R,    n.E5, R, n.D5, R,   n.C5, R, n.E5, R,
-        R, n.F5, R, n.E5,     n.D5, R, n.C5, R,    n.B4, R, R, n.C5,   R, R, R, R
+        // Bar 1 — repeated Bb, then jump up a 5th to F
+        n.Bb4,R, n.Bb4,R,     n.Bb4,R, R, R,       n.F5, R, R, R,      R, R, R, R,
+        // Bar 2 — F repeated, drop down a 4th to C
+        n.F5, R, n.F5, R,     R, R, n.C5, R,       n.C5, R, R, R,      R, R, R, R,
+        // Bar 3 — alternating pattern: D-Bb-D-Bb then climb
+        n.D5, R, n.Bb4,R,     n.D5, R, n.Bb4,R,    n.Eb5,R, n.F5, R,   R, R, R, R,
+        // Bar 4 — descend by step: Eb-D-C-Bb, precise
+        n.Eb5,R, R, R,        n.D5, R, R, R,       n.C5, R, R, R,      n.Bb4,R, R, R
       ],
       accents: [
-        1,0,1,0, 1,0,0,0,  1,0,1,0, 1,0,0,0,
-        0,1,0,1, 1,0,0,0,  1,0,1,0, 1,0,0,0,
-        1,0,1,0, 1,0,0,0,  1,0,1,0, 1,0,1,0,
-        0,1,0,1, 1,0,0,0,  1,0,0,1, 0,0,0,0
+        1,0,1,0, 1,0,0,0,  1,0,0,0, 0,0,0,0,
+        1,0,1,0, 0,0,1,0,  1,0,0,0, 0,0,0,0,
+        1,0,1,0, 1,0,1,0,  1,0,1,0, 0,0,0,0,
+        1,0,0,0, 1,0,0,0,  1,0,0,0, 1,0,0,0
       ],
       bass: [
-        n.C3,0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,  n.C3,0,0,0, 0,0,0,0,
-        n.C3,0,0,0, 0,0,0,0,  n.A3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0
+        n.Bb3,0,0,0, 0,0,0,0,  n.F3,0,0,0, 0,0,0,0,
+        n.F3,0,0,0, 0,0,0,0,   n.C3,0,0,0, 0,0,0,0,
+        n.Bb3,0,0,0, 0,0,0,0,  n.Eb3,0,0,0, 0,0,0,0,
+        n.Ab3,0,0,0, 0,0,0,0,  n.Bb3,0,0,0, 0,0,0,0
       ],
+      // Tight, precise hats — quarter note grid, very clean
       hat: [
-        1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, .3,
-        1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, 0,
-        1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, .3,
-        1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, .3,  1, 0, 0, 0
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0
       ],
       openHat: [
         0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
@@ -252,91 +272,104 @@ var MusicEngine = (function() {
         1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0
       ],
       leadType: 'triangle',
-      filterFreq: 3500
+      filterFreq: 3200
     },
 
-    // --- SONG 4: ABACUS (F major, 110 BPM, woody/marimba feel, gentle swing) ---
+    // --- SONG 4: ABACUS (A pentatonic, 100 BPM) ---
+    // Pentatonic only (A C D E G) — no chromatic, no half-steps
+    // Wide leaps, gentle, kalimba/music-box: sparse and floating
     {
       name: 'Abacus',
-      bpm: 110,
+      bpm: 100,
       steps: 64,
-      swing: 0.08,
+      swing: 0.06,
       melody: [
-        n.F4, R, n.A4, R,     n.C5, R, R, n.A4,   R, n.G4, R, n.F4,   R, R, R, R,
-        R, n.G4, R, n.Bb4,    n.A4, R, n.F4, R,    n.D4, R, n.F4, R,   R, R, R, R,
-        n.C5, R, n.A4, R,     n.F4, R, n.G4, R,    n.A4, R, n.Bb4, R,  n.C5, R, R, R,
-        R, n.Bb4, R, n.A4,    n.G4, R, n.F4, R,    n.E4, R, R, n.F4,   R, R, R, R
+        // Bar 1 — wide leap: low A up to E, then space
+        n.A4, R, R, R,        R, R, n.E5, R,       R, R, R, R,         R, R, R, R,
+        // Bar 2 — gentle descent: E-D, then low G plink
+        n.E5, R, R, n.D5,     R, R, R, R,          n.G4, R, R, R,      R, R, R, R,
+        // Bar 3 — playful: C-E leap, then A repeated
+        n.C5, R, R, R,        n.E5, R, R, R,       n.A4, R, R, n.A4,   R, R, R, R,
+        // Bar 4 — resolve: D floats up to E, lands on A
+        n.D5, R, R, R,        R, R, n.E5, R,       R, R, R, R,         n.A4, R, R, R
       ],
       accents: [
-        1,0,0,0, 1,0,0,0,  0,1,0,1, 0,0,0,0,
-        0,1,0,1, 1,0,0,0,  1,0,1,0, 0,0,0,0,
-        1,0,0,0, 1,0,1,0,  1,0,1,0, 1,0,0,0,
-        0,1,0,1, 1,0,0,0,  1,0,0,1, 0,0,0,0
+        1,0,0,0, 0,0,1,0,  0,0,0,0, 0,0,0,0,
+        1,0,0,1, 0,0,0,0,  1,0,0,0, 0,0,0,0,
+        1,0,0,0, 1,0,0,0,  1,0,0,1, 0,0,0,0,
+        1,0,0,0, 0,0,1,0,  0,0,0,0, 1,0,0,0
       ],
       bass: [
-        n.F3,0,0,0, 0,0,0,0,  n.C3,0,0,0, 0,0,0,0,
-        n.Bb3,0,0,0,0,0,0,0,  n.D3,0,0,0, 0,0,0,0,
-        n.F3,0,0,0, 0,0,0,0,  n.A3,0,0,0, 0,0,0,0,
-        n.Bb3,0,0,0,0,0,0,0,  n.C3,0,0,0, 0,0,0,0
+        n.A3, 0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        n.E3, 0,0,0, 0,0,0,0,  n.G3,0,0,0, 0,0,0,0,
+        n.A3, 0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        n.D3, 0,0,0, 0,0,0,0,  n.A3,0,0,0, 0,0,0,0
       ],
+      // Very minimal: just light taps, no driving beat
       hat: [
-        .5, 0, .3, 0,  .5, 0, .3, 0,  .5, 0, .3, 0,  .5, 0, .3, 0,
-        .5, 0, .3, 0,  .5, 0, .3, 0,  .5, 0, .3, 0,  .3, 0, 0, 0,
-        .5, 0, .3, 0,  .5, 0, .3, 0,  .5, 0, .3, 0,  .5, 0, .3, 0,
-        .5, 0, .3, 0,  .5, 0, .3, 0,  .5, 0, .3, 0,  .3, 0, 0, 0
+        .4, 0, 0, 0,  0, 0, 0, 0,  .4, 0, 0, 0,  0, 0, 0, 0,
+        .4, 0, 0, 0,  0, 0, 0, 0,  .4, 0, 0, 0,  0, 0, 0, 0,
+        .4, 0, 0, 0,  0, 0, 0, 0,  .4, 0, 0, 0,  0, 0, 0, 0,
+        .4, 0, 0, 0,  0, 0, 0, 0,  .4, 0, 0, 0,  0, 0, 0, 0
       ],
       openHat: [
-        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,1,0,
         0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
-        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,1,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
         0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
       ],
       ride: [
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
       ],
       kick: [
-        1, 0, 0, 0,  0, 0,.3, 0,  1, 0, 0, 0,  0, 0, 0, 0,
-        1, 0, 0, 0,  0, 0, 0, 0,  .5,0, 0, 0,  0, 0, 0, 0,
-        1, 0, 0, 0,  0, 0,.3, 0,  1, 0, 0, 0,  0, 0, 0, 0,
-        1, 0, 0, 0,  0, 0, 0, 0,  .5,0, 0, 0,  0, 0, 0, 0
+        .6, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0,
+        .6, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0,
+        .6, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0,
+        .6, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0
       ],
       leadType: 'triangle',
-      filterFreq: 2800
+      filterFreq: 2400
     },
 
-    // --- SONG 5: CLOCKWORK (G minor, 130 BPM, ticking rhythm, ascending/descending) ---
+    // --- SONG 5: CLOCKWORK (E minor, 120 BPM) ---
+    // Mechanical, relentless: descending 4-note scale motif on repeat
+    // Same figure transposed — obsessive, ticking, hypnotic
     {
       name: 'Clockwork',
-      bpm: 130,
+      bpm: 120,
       steps: 64,
       swing: 0,
       melody: [
-        n.G4, R, n.Bb4, R,    n.D5, R, n.Eb5, R,   n.D5, R, n.Bb4, R,  n.G4, R, R, R,
-        R, n.A4, R, n.C5,     n.D5, R, n.Eb5, R,   n.F5, R, n.D5, R,   n.C5, R, R, R,
-        n.Bb4, R, n.D5, n.F5, R, n.G5, n.F5, R,    n.Eb5, R, n.D5, R,  n.C5, R, n.Bb4, R,
-        R, n.C5, R, n.D5,     n.Eb5, R, n.D5, n.C5,R, n.Bb4, R, n.G4,  R, R, R, R
+        // Bar 1 — the motif: E-D-C-B (4 descending steps), then rest
+        n.E5, n.D5, n.C5, n.B4,  R, R, R, R,       n.E5, n.D5, n.C5, n.B4, R, R, R, R,
+        // Bar 2 — motif shifted down: D-C-B-A
+        n.D5, n.C5, n.B4, n.A4,  R, R, R, R,       n.D5, n.C5, n.B4, n.A4, R, R, R, R,
+        // Bar 3 — motif from G: G-F#-E-D (higher energy)
+        n.G5, n.Fs5,n.E5, n.D5,  R, R, R, R,       n.G5, n.Fs5,n.E5, n.D5, R, R, R, R,
+        // Bar 4 — resolve back: E-D-C-B, then single low E
+        n.E5, n.D5, n.C5, n.B4,  R, R, R, R,       R, R, R, R,         n.E4, R, R, R
       ],
       accents: [
-        1,0,1,0, 1,0,1,0,  1,0,0,0, 1,0,0,0,
-        0,1,0,1, 1,0,1,0,  1,0,0,0, 1,0,0,0,
-        1,0,1,1, 0,1,0,0,  1,0,1,0, 1,0,1,0,
-        0,1,0,1, 1,0,1,1,  0,0,0,1, 0,0,0,0
+        1,1,1,1, 0,0,0,0,  1,1,1,1, 0,0,0,0,
+        1,1,1,1, 0,0,0,0,  1,1,1,1, 0,0,0,0,
+        1,1,1,1, 0,0,0,0,  1,1,1,1, 0,0,0,0,
+        1,1,1,1, 0,0,0,0,  0,0,0,0, 1,0,0,0
       ],
       bass: [
-        n.G3,0,0,0, 0,0,0,0,  n.D3,0,0,0, 0,0,0,0,
-        n.C3,0,0,0, 0,0,0,0,  n.F3,0,0,0, 0,0,0,0,
-        n.Bb3,0,0,0,0,0,0,0,  n.Eb3,0,0,0,0,0,0,0,
-        n.C3,0,0,0, 0,0,0,0,  n.D3,0,0,0, 0,0,0,0
+        n.E3,0,0,0, 0,0,0,0,  n.E3,0,0,0, 0,0,0,0,
+        n.D3,0,0,0, 0,0,0,0,  n.D3,0,0,0, 0,0,0,0,
+        n.C3,0,0,0, 0,0,0,0,  n.B3,0,0,0, 0,0,0,0,
+        n.E3,0,0,0, 0,0,0,0,  0,0,0,0,   n.E3,0,0,0
       ],
-      // Ticking rhythm: steady 8th-note hats
+      // Steady mechanical ticking: 8th notes, unvarying
       hat: [
-        1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,
-        1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,
-        1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,
-        1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0,  1, 0, .6, 0
+        .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,
+        .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,
+        .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,
+        .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0,  .8, 0, .5, 0
       ],
       openHat: [
         0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
@@ -345,19 +378,19 @@ var MusicEngine = (function() {
         0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
       ],
       ride: [
-        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
-        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
-        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
-        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0,
+        0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0
       ],
       kick: [
-        1, 0, 0, 0,  0, 0,.5, 0,  1, 0, 0, 0,  0, 0,.5, 0,
-        1, 0, 0, 0,  0, 0,.5, 0,  1, 0, 0, 0,  0, 0, 0, 0,
-        1, 0, 0, 0,  0, 0,.5, 0,  1, 0, 0, 0,  0, 0,.5, 0,
-        1, 0, 0, 0,  0, 0,.5, 0,  1, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  .5,0, 0, 0,  1, 0, 0, 0,  .5,0, 0, 0,
+        1, 0, 0, 0,  .5,0, 0, 0,  1, 0, 0, 0,  .5,0, 0, 0,
+        1, 0, 0, 0,  .5,0, 0, 0,  1, 0, 0, 0,  .5,0, 0, 0,
+        1, 0, 0, 0,  .5,0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
       ],
       leadType: 'square',
-      filterFreq: 2000
+      filterFreq: 1800
     }
   ];
 

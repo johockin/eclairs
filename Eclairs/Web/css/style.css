@@ -308,13 +308,13 @@ body {
 /* === MODE SWITCH BUTTON === */
 .mode-switch {
   position: absolute;
-  bottom: max(70px, calc(env(safe-area-inset-bottom, 18px) + 58px));
+  top: max(14px, env(safe-area-inset-top, 14px));
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  padding: 10px 28px;
+  padding: 8px 22px;
   font-family: inherit;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
