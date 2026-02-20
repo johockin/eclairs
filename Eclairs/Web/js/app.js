@@ -428,10 +428,18 @@
 
   function init() {
     // Navigation
+    var navSounds = {
+      practice: SoundEngine.playMenuPractice,
+      stats: SoundEngine.playMenuStats,
+      config: SoundEngine.playMenuSettings,
+      home: SoundEngine.playMenuBack
+    };
     document.querySelectorAll('[data-nav]').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        navigate(btn.getAttribute('data-nav'));
+        var target = btn.getAttribute('data-nav');
+        if (navSounds[target]) navSounds[target]();
+        navigate(target);
       });
     });
 

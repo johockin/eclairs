@@ -276,8 +276,137 @@ var SoundEngine = (function() {
     osc2.stop(now + 0.75);
   }
 
+  // --- MENU SOUNDS: Distinct personality per button ---
+
+  // Practice: Power-up launch — fast ascending arpeggio, "let's GO"
+  function playMenuPractice() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var notes = [330, 440, 554, 659]; // E4, A4, C#5, E5
+    var filter = c.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 3200;
+    filter.connect(c.destination);
+
+    for (var i = 0; i < notes.length; i++) {
+      (function(freq, t) {
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.14, now + t);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + t + 0.08);
+        osc.connect(gain);
+        gain.connect(filter);
+        osc.start(now + t);
+        osc.stop(now + t + 0.09);
+      })(notes[i], i * 0.055);
+    }
+
+    // Final shimmer — the top note rings out
+    var osc = c.createOscillator();
+    var gain = c.createGain();
+    osc.type = 'square';
+    osc.frequency.value = 659;
+    gain.gain.setValueAtTime(0.12, now + 0.22);
+    gain.gain.setValueAtTime(0.12, now + 0.28);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.55);
+    osc.connect(gain);
+    gain.connect(filter);
+    osc.start(now + 0.22);
+    osc.stop(now + 0.56);
+  }
+
+  // Stats: Data readout — quick descending computer beep triplet
+  function playMenuStats() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var notes = [880, 660, 880]; // A5, E5, A5
+
+    for (var i = 0; i < notes.length; i++) {
+      (function(freq, t) {
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, now + t);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + t + 0.06);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(now + t);
+        osc.stop(now + t + 0.07);
+      })(notes[i], i * 0.07);
+    }
+  }
+
+  // Settings: Mechanical ratchet — two clicky pops with a gear-turn wobble
+  function playMenuSettings() {
+    var c = getCtx();
+    var now = c.currentTime;
+
+    // Click 1 — sharp pop
+    var osc1 = c.createOscillator();
+    var gain1 = c.createGain();
+    osc1.type = 'square';
+    osc1.frequency.setValueAtTime(600, now);
+    osc1.frequency.exponentialRampToValueAtTime(200, now + 0.04);
+    gain1.gain.setValueAtTime(0.18, now);
+    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+    osc1.connect(gain1);
+    gain1.connect(c.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.06);
+
+    // Click 2 — slightly lower, offset
+    var osc2 = c.createOscillator();
+    var gain2 = c.createGain();
+    osc2.type = 'square';
+    osc2.frequency.setValueAtTime(500, now + 0.08);
+    osc2.frequency.exponentialRampToValueAtTime(160, now + 0.12);
+    gain2.gain.setValueAtTime(0.14, now + 0.08);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.13);
+    osc2.connect(gain2);
+    gain2.connect(c.destination);
+    osc2.start(now + 0.08);
+    osc2.stop(now + 0.14);
+
+    // Gear wobble — low sine wiggle
+    var osc3 = c.createOscillator();
+    var gain3 = c.createGain();
+    osc3.type = 'sine';
+    osc3.frequency.setValueAtTime(180, now + 0.06);
+    osc3.frequency.exponentialRampToValueAtTime(120, now + 0.2);
+    gain3.gain.setValueAtTime(0.08, now + 0.06);
+    gain3.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+    osc3.connect(gain3);
+    gain3.connect(c.destination);
+    osc3.start(now + 0.06);
+    osc3.stop(now + 0.23);
+  }
+
+  // Back: Soft retreat pop — quick descending blip
+  function playMenuBack() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var osc = c.createOscillator();
+    var gain = c.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(280, now + 0.08);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 0.11);
+  }
+
   return {
     playCorrect: playCorrect,
-    playWrong: playWrong
+    playWrong: playWrong,
+    playMenuPractice: playMenuPractice,
+    playMenuStats: playMenuStats,
+    playMenuSettings: playMenuSettings,
+    playMenuBack: playMenuBack
   };
 })();
