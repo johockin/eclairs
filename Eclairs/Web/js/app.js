@@ -14,6 +14,7 @@
   var sessionTotal = 0;
   var statsPaused = false;
   var inputLocked = false;
+  var musicOff = false;
 
   // --- Routing ---
 
@@ -29,8 +30,8 @@
     if (id === 'config') renderConfig();
     if (id === 'stats') renderStats();
 
-    // Background music: play on home & stats, stop on practice & config
-    if (id === 'home' || id === 'stats') {
+    // Background music: play everywhere except practice (if not toggled off)
+    if (id !== 'practice' && !musicOff) {
       MusicEngine.start();
     } else {
       MusicEngine.stop();
@@ -366,7 +367,41 @@
       }
     });
 
+    html += '<button class="toolbar-btn stats-reset-btn" id="btn-reset-stats">Reset all stats</button>';
+
     container.innerHTML = html;
+
+    document.getElementById('btn-reset-stats').addEventListener('click', function(e) {
+      e.stopPropagation();
+      resetStats();
+    });
+  }
+
+  var resetStatsConfirm = false;
+  var resetStatsTimer = null;
+
+  function resetStats() {
+    var btn = document.getElementById('btn-reset-stats');
+    if (!btn) return;
+
+    if (!resetStatsConfirm) {
+      resetStatsConfirm = true;
+      btn.textContent = 'Tap again to confirm';
+      btn.classList.add('confirm');
+      clearTimeout(resetStatsTimer);
+      resetStatsTimer = setTimeout(function() {
+        resetStatsConfirm = false;
+        btn.textContent = 'Reset all stats';
+        btn.classList.remove('confirm');
+      }, 3000);
+      return;
+    }
+
+    // Confirmed
+    clearTimeout(resetStatsTimer);
+    resetStatsConfirm = false;
+    Storage.clearStats();
+    renderStats();
   }
 
   function renderStatCell(stats) {
@@ -382,7 +417,8 @@
   function updateSongPicker() {
     var current = MusicEngine.getCurrentSong();
     document.querySelectorAll('.song-btn').forEach(function(btn) {
-      btn.classList.toggle('active', parseInt(btn.getAttribute('data-song'), 10) === current);
+      var isCurrent = parseInt(btn.getAttribute('data-song'), 10) === current;
+      btn.classList.toggle('active', isCurrent && !musicOff);
     });
   }
 
@@ -425,12 +461,21 @@
     document.getElementById('btn-config-all').addEventListener('click', selectAllConfig);
     document.getElementById('btn-config-clear').addEventListener('click', clearAllConfig);
 
-    // Song picker
+    // Song picker (toggle: click active song to stop, click different to switch)
     document.querySelectorAll('.song-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
         var index = parseInt(btn.getAttribute('data-song'), 10);
-        MusicEngine.setSong(index);
+        if (index === MusicEngine.getCurrentSong() && !musicOff) {
+          // Toggle off
+          musicOff = true;
+          MusicEngine.stop();
+        } else {
+          // Switch song (or re-enable)
+          musicOff = false;
+          MusicEngine.setSong(index);
+          MusicEngine.start();
+        }
         updateSongPicker();
       });
     });

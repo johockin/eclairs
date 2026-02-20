@@ -566,6 +566,17 @@ body {
 .stats-mid { color: #EF6C00; }
 .stats-weak { color: #C62828; }
 
+.stats-reset-btn {
+  display: block;
+  margin: 24px auto 0;
+  opacity: 0.2;
+}
+.stats-reset-btn.confirm {
+  opacity: 0.5;
+  font-weight: 600;
+  color: #C62828;
+}
+
 .stats-streak {
   font-size: 0.8rem;
   font-weight: 500;

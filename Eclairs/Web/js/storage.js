@@ -208,6 +208,10 @@ var Storage = (function() {
     };
   }
 
+  function clearStats() {
+    localStorage.removeItem(ATTEMPTS_KEY);
+  }
+
   function clearAllData() {
     localStorage.removeItem(ATTEMPTS_KEY);
     localStorage.removeItem(CONFIG_KEY);
@@ -221,6 +225,7 @@ var Storage = (function() {
     getSummary: getSummary,
     getSelectedItems: getSelectedItems,
     setSelectedItems: setSelectedItems,
+    clearStats: clearStats,
     clearAllData: clearAllData
   };
 })();
