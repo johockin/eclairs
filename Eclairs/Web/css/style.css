@@ -111,16 +111,15 @@ body {
 .glass-btn {
   display: block;
   width: 100%;
-  padding: 24px 24px;
-  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  padding: 22px 24px;
+  font-family: inherit;
   font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--text-color, var(--fg));
   background: var(--btn-bg);
   border: 1px solid var(--btn-border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   box-shadow: var(--btn-shadow);
   cursor: pointer;
   text-align: center;
@@ -133,7 +132,7 @@ body {
   box-shadow: var(--btn-shadow-pressed);
 }
 .glass-btn-large {
-  padding: 28px 24px;
+  padding: 26px 24px;
   font-size: 1.2rem;
 }
 .glass-btn-save {
@@ -182,7 +181,6 @@ body {
   color: var(--text-color, var(--fg));
   -webkit-font-smoothing: none;
   font-smooth: never;
-  filter: url(#pixelate);
 }
 
 .home-subtitle {
