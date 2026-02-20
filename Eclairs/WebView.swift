@@ -25,6 +25,7 @@ struct WebView: UIViewRepresentable {
         webView.scrollView.backgroundColor = .clear
         webView.scrollView.isScrollEnabled = true
         webView.scrollView.bounces = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
 
         // Disable long-press context menu
         webView.allowsLinkPreview = false
