@@ -179,17 +179,8 @@ body {
   letter-spacing: -0.03em;
   line-height: 1;
   color: var(--text-color, var(--fg));
-  position: relative;
-}
-.home-title::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px);
-  background-size: 4px 4px;
-  pointer-events: none;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
 }
 
 .home-subtitle {
