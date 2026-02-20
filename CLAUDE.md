@@ -468,6 +468,33 @@ python -m http.server 8000
 - **Files Modified**: `ContentView.swift`, `EclairsApp.swift`, `WebView.swift`
 - **Status**: Fixed, confirmed by user
 
+### 2026-02-20 (Numbers Mode: Full Build)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Created `js/numbers.js` — NumberEngine IIFE module with 7 French difficulty tiers (1-10, 11-16, 17-20, 21-69, 70-79, 80-89, 90-99)
+  2. Built per-number mastery scoring (same algorithm as phonics: last 20 attempts, recency-weighted, streak bonus, 3-day decay)
+  3. Weighted random generator with no-repeat, tier-based assess (frustration detection + promotion + 2-day retry)
+  4. Restructured home screen HTML with CSS 3D flip card: front = Phonics, back = Les Nombres
+  5. Added mode switch pill button (outside flip card, always visible)
+  6. Branched practice screen logic by `currentMode` — shared `#screen-practice` for both modes
+  7. Built numbers config screen (tier toggles, all/none/defaults)
+  8. Built numbers stats screen (tier mastery bars, locked indicators, accuracy, attempt counts)
+  9. Added 3 new chiptune songs for numbers mode:
+     - Song 3 "Calculator": C major, 125 BPM, triangle lead, clean music-box feel
+     - Song 4 "Abacus": F major, 110 BPM, triangle lead, gentle swing, woody feel
+     - Song 5 "Clockwork": G minor, 130 BPM, square lead, ticking 8th-note hats
+  10. Song picker split: songs 0-2 on phonics face, songs 3-5 on numbers face
+  11. Mode-aware reset stats (two-tap confirm, separate for each mode)
+  12. Warm-toned color palettes for numbers practice (cream, peach, sand, gold, etc.)
+- **Files Created**:
+  - `Eclairs/Web/js/numbers.js` — NumberEngine module (~280 lines)
+- **Files Modified**:
+  - `Eclairs/Web/index.html` — Flip card home, mode switch, numbers config/stats screens
+  - `Eclairs/Web/css/style.css` — Flip card CSS, mode switch, config-item-wide, stats-locked
+  - `Eclairs/Web/js/app.js` — Complete rewrite: mode branching, numbers routing, numbers config/stats (873 lines)
+  - `Eclairs/Web/js/music.js` — 3 new songs added (Calculator, Abacus, Clockwork)
+- **Status**: Committed (`e57314d`), ready for Xcode testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -477,7 +504,7 @@ python -m http.server 8000
 
 ## DEVELOPMENT ROADMAP
 
-### Current Status: **Phase 4** - Native Bridges
+### Current Status: **Phase 5** - Numbers Mode (built, needs testing)
 
 **See .ralph/fix_plan.md for detailed task checklist.**
 
@@ -505,17 +532,17 @@ python -m http.server 8000
 - [x] Mastery bars in stats screen
 - [ ] Session summary
 
-### Phase 4: Native Bridges [CURRENT]
+### Phase 4: Native Bridges [COMPLETE]
 - [x] Haptic feedback bridge (JS → Swift Taptic Engine)
 - [ ] Migrate localStorage to UserDefaults bridge (data durability) — DEFERRED
 
-### Phase 5: Numbers Mode
-- [ ] Number generator with French difficulty tiers (1-10, 11-20, 21-69, 70-99)
-- [ ] Separate skin (warm amber/cream palette, different practice screen colors)
-- [ ] Mode switch on home screen with flip animation
-- [ ] Per-number tracking + weighted selection (reuse mastery algorithm)
-- [ ] Range-based stats display
-- [ ] New song set for numbers mode
+### Phase 5: Numbers Mode [COMPLETE - NEEDS TESTING]
+- [x] Number generator with French difficulty tiers (7 tiers: 1-10 through 90-99)
+- [x] Separate skin (warm amber/cream palette, different practice screen colors)
+- [x] Mode switch on home screen with flip animation
+- [x] Per-number tracking + weighted selection (reuse mastery algorithm)
+- [x] Range-based stats display (tier mastery bars, locked indicators)
+- [x] New song set for numbers mode (Calculator, Abacus, Clockwork)
 
 ### Phase 6: Release Prep
 - [ ] App icon, launch screen
@@ -582,24 +609,27 @@ Find working example in codebase → Compare → Apply working pattern
 ### Production Status
 - **Architecture**: iOS app (SwiftUI + WKWebView) wrapping vanilla HTML/CSS/JS
 - **Performance**: Zero dependencies, local bundle, instant loading
-- **State**: Phase 1 prototype complete, ready for Xcode testing
+- **State**: Phase 5 complete (Numbers Mode built), needs Xcode testing
 
 ### Key Files
-- `Eclairs/Web/index.html` - Multi-screen SPA shell
-- `Eclairs/Web/css/style.css` - All styles
-- `Eclairs/Web/js/app.js` - Main app logic
+- `Eclairs/Web/index.html` - Multi-screen SPA shell (flip card home, 6 screens)
+- `Eclairs/Web/css/style.css` - All styles (candy skeuomorphic + flip card)
+- `Eclairs/Web/js/app.js` - Main app logic (dual-mode: phonics + numbers)
 - `Eclairs/Web/js/syllables.js` - Syllable data + practice items
+- `Eclairs/Web/js/numbers.js` - Number engine (7 tiers, mastery, generator)
 - `Eclairs/Web/js/sounds.js` - Sound effects engine
-- `Eclairs/Web/js/storage.js` - Stats & storage engine
+- `Eclairs/Web/js/music.js` - Background music engine (6 songs)
+- `Eclairs/Web/js/storage.js` - Stats & storage engine (phonics)
+- `Eclairs/Web/js/haptics.js` - JS→Swift haptic bridge
 - `Eclairs/*.swift` - iOS wrapper (3 files)
 - `Eclairs.xcodeproj/` - Xcode project
-- `.ralph/` - Ralph development documentation
 
 ### Next Priority
-1. Open Eclairs.xcodeproj in Xcode and test on Simulator
-2. Verify sound effects work in WKWebView
-3. Test localStorage persistence across app launches
-4. UI polish based on testing feedback
+1. Test Numbers Mode in Xcode: flip animation, practice, stats, config
+2. Test song switching between phonics and numbers sets
+3. Verify warm color palettes look right in numbers practice
+4. Polish based on testing feedback
+5. Phase 6: Release prep (launch screen, TestFlight)
 
 ---
 
@@ -625,11 +655,12 @@ CLAUDE.md (this file) ─────────────────── 
 │       ├── index.html ───────────────────── Multi-screen SPA shell
 │       ├── css/style.css ────────────────── All styles
 │       └── js/
-│           ├── app.js ───────────────────── Main app logic & routing
+│           ├── app.js ───────────────────── Main app logic & routing (dual-mode)
 │           ├── syllables.js ─────────────── Syllable data + practice items
+│           ├── numbers.js ───────────────── Number engine (7 tiers, mastery)
 │           ├── haptics.js ───────────────── JS→Swift haptic bridge
 │           ├── sounds.js ────────────────── Web Audio API sound effects
-│           ├── music.js ─────────────────── Background music engine
+│           ├── music.js ─────────────────── Background music engine (6 songs)
 │           └── storage.js ───────────────── localStorage stats engine
 │
 ├── _icons/ ◄────────────────────────────── App icon generation
