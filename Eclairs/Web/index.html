@@ -12,6 +12,17 @@
 </head>
 <body>
 
+  <!-- Pixelation filter for title -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="pixelate" x="0" y="0" width="100%" height="100%">
+      <feFlood x="0" y="0" width="1" height="1" flood-color="white"/>
+      <feComposite in2="SourceGraphic" width="3" height="3"/>
+      <feTile/>
+      <feComposite in="SourceGraphic" operator="in"/>
+      <feMorphology operator="dilate" radius="1"/>
+    </filter>
+  </svg>
+
   <!-- ============ HOME ============ -->
   <div class="screen active" id="screen-home">
     <div class="home-container">
