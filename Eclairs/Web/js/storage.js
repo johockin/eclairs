@@ -359,12 +359,21 @@ var Storage = (function() {
     }
 
     // --- Re-enable: try bringing back auto-disabled items after 2 days ---
+    // Only if the item's tier is at or below the current max tier in the pool
     var RETRY_DAYS = 2;
     var autoDisabled = getAutoDisabled();
     var now = Date.now();
+
+    var currentMaxTier = -1;
+    selected.forEach(function(id) {
+      var t = PracticeItems.getTierForItem(id);
+      if (t > currentMaxTier) currentMaxTier = t;
+    });
+
     Object.keys(autoDisabled).forEach(function(id) {
       var daysSince = (now - autoDisabled[id]) / (24 * 60 * 60 * 1000);
-      if (daysSince >= RETRY_DAYS && selected.indexOf(id) === -1) {
+      var itemTier = PracticeItems.getTierForItem(id);
+      if (daysSince >= RETRY_DAYS && selected.indexOf(id) === -1 && itemTier <= currentMaxTier) {
         selected.push(id);
         promoted.push(id);
         delete autoDisabled[id];
