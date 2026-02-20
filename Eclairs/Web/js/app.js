@@ -474,7 +474,8 @@
           // Switch song (or re-enable)
           musicOff = false;
           MusicEngine.setSong(index);
-          MusicEngine.start();
+          // setSong stops playback; restart after brief fade-out
+          setTimeout(function() { MusicEngine.start(); }, 100);
         }
         updateSongPicker();
       });

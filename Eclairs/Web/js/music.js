@@ -425,6 +425,7 @@ var MusicEngine = (function() {
     isPlaying = true;
     currentStep = 0;
     nextNoteTime = c.currentTime + 0.05;
+    masterGain.gain.cancelScheduledValues(c.currentTime);
     masterGain.gain.setValueAtTime(0, c.currentTime);
     masterGain.gain.linearRampToValueAtTime(VOLUME, c.currentTime + 0.8);
     timerId = setInterval(scheduler, 25);
@@ -438,19 +439,15 @@ var MusicEngine = (function() {
       timerId = null;
     }
     if (masterGain && ctx) {
+      masterGain.gain.cancelScheduledValues(ctx.currentTime);
       masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
     }
   }
 
   function setSong(index) {
     if (index < 0 || index >= songs.length) return;
-    var wasPlaying = isPlaying;
-    if (wasPlaying) stop();
+    if (isPlaying) stop();
     currentSong = index;
-    if (wasPlaying) {
-      // Small delay so fade-out finishes before restart
-      setTimeout(start, 450);
-    }
   }
 
   function getSongCount() { return songs.length; }

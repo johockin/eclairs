@@ -365,6 +365,22 @@ python -m http.server 8000
   - `Eclairs/Web/css/style.css` — Song picker pill button styles (candy-skeuomorphic)
 - **Status**: Ready for testing
 
+### 2026-02-20 (Song Toggle, Music on Settings, Reset Stats, Fix Race Condition)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Song picker buttons now toggle: clicking the active song stops music, clicking again re-enables
+  2. Music plays on home, stats, AND settings screens — only stops on practice
+  3. Added "Reset all stats" button at bottom of stats screen with two-tap confirmation
+  4. Added `Storage.clearStats()` — clears attempts only, preserves selected items config
+  5. **Bug fix**: `setSong()` had internal `setTimeout(start, 450)` that raced with external `start()` calls — removed auto-restart from setSong, caller now manages start explicitly with 100ms delay
+  6. Added `cancelScheduledValues()` in both `start()` and `stop()` to prevent Web Audio gain ramp conflicts
+- **Files Modified**:
+  - `Eclairs/Web/js/music.js` — Fixed setSong race condition, added cancelScheduledValues
+  - `Eclairs/Web/js/app.js` — Song toggle, musicOff state, reset stats, music on settings
+  - `Eclairs/Web/js/storage.js` — Added clearStats()
+  - `Eclairs/Web/css/style.css` — Reset stats button styles
+- **Status**: Fixed, ready for testing
+
 ### 2026-02-20 (App Icon: r3-le-dark selected and installed)
 - **Claude Instance**: Claude Opus 4
 - **Action**:
