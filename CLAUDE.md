@@ -409,6 +409,27 @@ python -m http.server 8000
   - `Eclairs/Web/js/app.js` — navSounds map in init(), plays sound on each nav button click
 - **Status**: Committed, ready for testing
 
+### 2026-02-20 (Adaptive Weighted Practice + Auto-Adjust)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Built mastery scoring system (0-100 per item) based on last 20 attempts with recency weighting + streak bonus
+  2. Replaced uniform random item selection with weighted random — struggling items appear up to 10x more often than mastered ones
+  3. Added mastery decay: items not seen in 3+ days lose mastery to trigger periodic retesting
+  4. Added mastery bars to stats table (orange filling, turns green at ≥80%)
+  5. Built auto-adjust assessment engine that runs after every attempt:
+     - **Frustration detection**: item <25% accuracy over last 8 attempts → auto-disabled (too hard). Pool never shrinks below 3 items
+     - **Tier promotion**: average mastery ≥70% across current pool → next difficulty tier auto-enabled in settings
+     - **Retry**: auto-disabled items come back after 2 days, but ONLY if their tier is already unlocked
+  6. Defined 5 difficulty tiers in syllables.js: letters → basic nasals/digraphs → accents/more digraphs → hard nasals (gn, oin) → C/G confusion
+  7. Brief toast notification when items are added or removed during practice
+  8. Auto-disabled items tracked separately in localStorage (`eclairs_auto_disabled`)
+- **Files Modified**:
+  - `Eclairs/Web/js/storage.js` — getMastery(), getWeights(), assess(), auto-disabled tracking
+  - `Eclairs/Web/js/syllables.js` — difficulty tiers array, getTiers(), getTierForItem()
+  - `Eclairs/Web/js/app.js` — weighted random selection, assess() call in scorePractice, showAssessNotice()
+  - `Eclairs/Web/css/style.css` — mastery bar styles, assess notice styles
+- **Status**: Committed, ready for testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -438,9 +459,12 @@ python -m http.server 8000
 - [ ] UI polish and animation refinement
 - [ ] Safe area verification on notched iPhones
 
-### Phase 3: Stats & Thresholds
-- [ ] Mastery threshold system
-- [ ] Weighted practice selection (struggling items appear more)
+### Phase 3: Stats & Thresholds [COMPLETE]
+- [x] Mastery threshold system (0-100 per item, recency-weighted + streak bonus)
+- [x] Weighted practice selection (struggling items appear up to 10x more)
+- [x] Auto-adjust: frustration detection (auto-disable too-hard items)
+- [x] Auto-adjust: tier promotion (unlock next difficulty when ready)
+- [x] Mastery bars in stats screen
 - [ ] Session summary
 
 ### Phase 4: Release Prep
