@@ -29,6 +29,13 @@
     if (id === 'config') renderConfig();
     if (id === 'stats') renderStats();
 
+    // Background music: play on home & stats, stop on practice & config
+    if (id === 'home' || id === 'stats') {
+      MusicEngine.start();
+    } else {
+      MusicEngine.stop();
+    }
+
     if (id !== 'practice') {
       document.body.style.setProperty('--bg-color', '#E6E6FA');
       document.body.style.setProperty('--text-color', '#4A148C');

@@ -318,6 +318,23 @@ python -m http.server 8000
   - `.gitignore` — Added node_modules, package-lock.json, _icons/icon-grid/
 - **Status**: Complete, ready for re-test in Xcode
 
+### 2026-02-20 (Background Music: Bouncy Chiptune Loop)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Created `js/music.js` — Web Audio API synthesized background music
+  2. Excite Bike-inspired: bouncy C major arpeggios, syncopated offbeat accents, 140 BPM
+  3. 4 voices: square wave lead (low-pass filtered for lo-fi warmth), triangle bass, hi-hat (noise), kick (sine pitch drop)
+  4. 4-bar loop (64 16th-note steps): ascending run → syncopated answer → higher phrase → resolution
+  5. Look-ahead scheduler (setInterval 25ms + 100ms buffer) prevents timing drift
+  6. Quiet volume (0.09 master gain), 0.8s fade-in, 0.4s fade-out
+  7. Plays on home + stats screens, stops on practice + config
+- **Files Created**:
+  - `Eclairs/Web/js/music.js` — Background music engine
+- **Files Modified**:
+  - `Eclairs/Web/index.html` — Added music.js script tag
+  - `Eclairs/Web/js/app.js` — MusicEngine.start()/stop() in showScreen()
+- **Status**: Ready for testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -463,6 +480,7 @@ CLAUDE.md (this file) ─────────────────── 
 │           ├── app.js ───────────────────── Main app logic & routing
 │           ├── syllables.js ─────────────── Syllable data + practice items
 │           ├── sounds.js ────────────────── Web Audio API sound effects
+│           ├── music.js ─────────────────── Background music engine
 │           └── storage.js ───────────────── localStorage stats engine
 │
 ├── _icons/ ◄────────────────────────────── App icon generation
