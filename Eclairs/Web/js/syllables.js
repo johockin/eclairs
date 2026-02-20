@@ -34,22 +34,30 @@ var PracticeItems = (function() {
     { id: 'ain', display: 'ain', category: 'nasals', label: 'Sons nasaux', defaultOn: false },
     { id: 'ein', display: 'ein', category: 'nasals', label: 'Sons nasaux', defaultOn: false },
     { id: 'oin', display: 'oin', category: 'nasals', label: 'Sons nasaux', defaultOn: false },
+    { id: 'ien', display: 'ien', category: 'nasals', label: 'Sons nasaux', defaultOn: false },
 
     // --- Common Digraphs / Complex Sounds ---
     { id: 'ou', display: 'ou', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
     { id: 'oi', display: 'oi', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
     { id: 'ch', display: 'ch', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
+    { id: 'ph', display: 'ph', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
     { id: 'gn', display: 'gn', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
+    { id: 'ill', display: 'ill', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
     { id: 'ai', display: 'ai', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
+    { id: 'eil', display: 'eil', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
     { id: 'au', display: 'au', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
     { id: 'eau', display: 'eau', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
     { id: 'eu', display: 'eu', category: 'digraphs', label: 'Sons complexes', defaultOn: true },
     { id: 'ui', display: 'ui', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
+    { id: 'tion', display: 'tion', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
+    { id: 'er', display: 'er', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
+    { id: 'ez', display: 'ez', category: 'digraphs', label: 'Sons complexes', defaultOn: false },
 
     // --- Accented Vowels (accent confusion) ---
     { id: 'e_acute', display: 'é', category: 'accents', label: 'Accents', defaultOn: true },
     { id: 'e_grave', display: 'è', category: 'accents', label: 'Accents', defaultOn: true },
     { id: 'e_circ', display: 'ê', category: 'accents', label: 'Accents', defaultOn: false },
+    { id: 'c_cedilla', display: 'ç', category: 'accents', label: 'Accents', defaultOn: false },
 
     // --- Soft/Hard consonant confusion ---
     { id: 'c_hard', display: 'ca', category: 'consonants', label: 'C/G dur et doux', defaultOn: false },
@@ -87,12 +95,12 @@ var PracticeItems = (function() {
   var tiers = [
     // Tier 0: mirror letters (easiest — just letter recognition)
     ['b', 'd', 'p', 'q', 'm', 'n'],
-    // Tier 1: basic nasals + simple digraphs
-    ['on', 'an', 'in', 'en', 'ou', 'oi', 'ch'],
-    // Tier 2: accents + more digraphs
-    ['e_acute', 'e_grave', 'ai', 'au', 'eau', 'eu'],
-    // Tier 3: harder nasals + remaining digraphs
-    ['ain', 'ein', 'oin', 'gn', 'ui', 'e_circ'],
+    // Tier 1: basic nasals + simple digraphs + ph
+    ['on', 'an', 'in', 'en', 'ou', 'oi', 'ch', 'ph'],
+    // Tier 2: accents + more digraphs + common endings
+    ['e_acute', 'e_grave', 'ai', 'au', 'eau', 'eu', 'er', 'ez', 'tion'],
+    // Tier 3: harder nasals + tricky digraphs + ç
+    ['ain', 'ein', 'oin', 'gn', 'ui', 'e_circ', 'c_cedilla', 'ill', 'eil', 'ien'],
     // Tier 4: consonant confusion (hardest)
     ['c_hard', 'c_soft', 'g_hard', 'g_soft']
   ];
