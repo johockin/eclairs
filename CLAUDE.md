@@ -468,6 +468,16 @@ python -m http.server 8000
 - **Files Modified**: `ContentView.swift`, `EclairsApp.swift`, `WebView.swift`
 - **Status**: Fixed, confirmed by user
 
+### 2026-02-20 (Mode Switch + Song Rewrites)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Moved mode switch button from above song picker to very top of screen (near status bar)
+  2. Rewrote all 6 songs for distinct melodic identity — no more similar bouncy arpeggios
+  3. Phonics: Bouncy (C maj riff), Mellow (D maj dreamy 92 BPM), Jazzy (Eb maj chromatic swing)
+  4. Numbers: Calculator (Bb maj staccato repeats), Abacus (A pentatonic sparse), Clockwork (E min descending motif)
+- **Files Modified**: `css/style.css`, `js/music.js`
+- **Status**: Committed (`865a246`)
+
 ### 2026-02-20 (Numbers Mode: Full Build)
 - **Claude Instance**: Claude Opus 4
 - **Action**:
