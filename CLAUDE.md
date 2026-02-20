@@ -394,6 +394,21 @@ python -m http.server 8000
   - `Eclairs/Assets.xcassets/AppIcon.appiconset/Contents.json` — Added filename reference
 - **Status**: App icon installed, ready for Xcode build
 
+### 2026-02-20 (Menu Button Sound Effects)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Added 4 distinct synthesized sound effects for menu navigation buttons
+  2. Practice: power-up ascending arpeggio (E4→A4→C#5→E5 square wave, lowpass filtered)
+  3. Stats: data readout beep triplet (A5→E5→A5 triangle wave)
+  4. Settings: mechanical ratchet (two clicky square wave pops + low sine gear wobble)
+  5. Back: soft retreat pop (descending triangle blip 520→280Hz)
+  6. Fixed syntax error from previous edit (missing `return {` in IIFE)
+  7. Wired sounds into nav click handlers via `navSounds` lookup map
+- **Files Modified**:
+  - `Eclairs/Web/js/sounds.js` — 4 new menu sound functions + fixed return statement
+  - `Eclairs/Web/js/app.js` — navSounds map in init(), plays sound on each nav button click
+- **Status**: Committed, ready for testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
