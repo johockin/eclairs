@@ -554,7 +554,15 @@ python -m http.server 8000
 - [x] Range-based stats display (tier mastery bars, locked indicators)
 - [x] New song set for numbers mode (Calculator, Abacus, Clockwork)
 
-### Phase 6: Release Prep
+### Phase 6: Response Time Tracking
+- [ ] Record timestamp when each item is displayed
+- [ ] Calculate response delta on correct/wrong press
+- [ ] Outlier filtering (>30s = discard, user walked away)
+- [ ] Fast correct answers give small mastery bonus (+5 to +15 scaling with speed)
+- [ ] Store response time in attempt records (both phonics Storage and NumberEngine)
+- [ ] Works for both phonics and numbers modes
+
+### Phase 7: Release Prep
 - [ ] App icon, launch screen
 - [ ] TestFlight build
 
