@@ -278,6 +278,46 @@ python -m http.server 8000
 - **Design Reference**: "Dieter Rams × Braun hi-fi × Kubrick 1960s" — tactile, candy-like, expensive toy
 - **Status**: Ready for re-test in Xcode
 
+### 2026-02-20 (App Icon Design: Rounds 1 & 2)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Set up programmatic icon generation pipeline with `_icons/generate-icon-grid.js` (node-canvas)
+  2. Round 1: 3 metaphors × 3 color variants = 9 icons
+     - A: Lightning bolt (literal "éclair")
+     - B: Letter tile (Scrabble piece with "é") — DROPPED
+     - C: Giant accent mark — 3 variants promoted to CONTENDERS
+  3. Fixed font rendering (node-canvas can't load system fonts) — all letter shapes drawn via canvas paths
+  4. Round 2: User proposed "lé" fusion (bolt IS the letter "l" + accented "é")
+     - A variants: 3 bolt refinements (thick, mini, pink)
+     - D variants: 3 "lé" fusion (lavender, coral, dark navy)
+  5. HTML review grid at `_icons/icon-grid/index.html` with iOS squircle clip + size previews
+- **Files Created**:
+  - `_icons/generate-icon-grid.js` — Icon generator with path-based letter drawing
+  - `_icons/icon-grid/` — Generated output (gitignored)
+  - `package.json` — For node-canvas dependency
+- **User Decisions**:
+  - C (accent mark) → all 3 are contenders, no further iteration
+  - A (bolt) → iterate on
+  - B (tile) → dropped
+  - D ("lé" fusion) → new metaphor, iterate on
+- **Status**: Round 2 generated, awaiting user feedback
+
+### 2026-02-20 (Powder-Coated Plastic Button Upgrade)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. User feedback: buttons need to be "way more tactile, long, fat, plastic or white powder-coated"
+  2. Introduced `--btn-edge: 5px` CSS variable for visible bottom thickness band
+  3. Shadow stack: first layer `0 var(--btn-edge) 0 <color>` creates the solid bottom edge
+  4. Press animation: `translateY(var(--btn-edge))` pushes button flush with surface
+  5. Score buttons get color-matched bottom edges (#388E3C green, #C62828 red)
+  6. All hover states updated to preserve visible edge
+  7. Config items get full press travel
+  8. Taller button padding (22px → 26px for large)
+- **Files Modified**:
+  - `Eclairs/Web/css/style.css` — Full powder-coated depth system
+  - `.gitignore` — Added node_modules, package-lock.json, _icons/icon-grid/
+- **Status**: Complete, ready for re-test in Xcode
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -425,12 +465,17 @@ CLAUDE.md (this file) ─────────────────── 
 │           ├── sounds.js ────────────────── Web Audio API sound effects
 │           └── storage.js ───────────────── localStorage stats engine
 │
+├── _icons/ ◄────────────────────────────── App icon generation
+│   ├── generate-icon-grid.js ────────────── node-canvas icon generator
+│   └── icon-grid/ ───────────────────────── Generated output (gitignored)
+│
 ├── .ralph/ ◄────────────────────────────── Ralph development docs
 │   ├── PROMPT.md ────────────────────────── Development instructions
 │   ├── fix_plan.md ──────────────────────── Task checklist
 │   └── AGENT.md ─────────────────────────── Build/run commands
 │
 ├── .ralphrc ◄───────────────────────────── Ralph config
+├── package.json ◄───────────────────────── node-canvas dependency (icon gen only)
 ├── /_dropbox/ ◄─────────────────────────── **DROP FILES HERE** for Claude to find
 ```
 

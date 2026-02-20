@@ -25,3 +25,10 @@ _logs/
 # Keep dropbox folder but ignore contents
 _dropbox/*
 !_dropbox/.gitkeep
+
+# Node
+node_modules/
+package-lock.json
+
+# Icon generation output (regenerated from script)
+_icons/icon-grid/
