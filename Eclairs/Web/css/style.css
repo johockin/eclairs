@@ -223,16 +223,20 @@ body {
 }
 
 .song-btn {
-  padding: 10px 16px;
-  min-width: 72px;
-  font-family: inherit;
-  font-size: 0.7rem;
+  padding: 18px 10px;
+  min-width: 56px;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   border: 1px solid var(--btn-border);
-  border-radius: 6px;
-  background: var(--btn-bg);
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px),
+    var(--btn-bg);
+  background-size: 3px 3px, 3px 3px, auto;
   color: var(--text-color, var(--fg));
   cursor: pointer;
   opacity: 0.35;
@@ -251,7 +255,11 @@ body {
 }
 .song-btn.active {
   opacity: 0.85;
-  background: var(--text-color, var(--fg));
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+    var(--text-color, var(--fg));
+  background-size: 3px 3px, 3px 3px, auto;
   color: var(--bg-color, var(--bg));
   border-color: transparent;
   box-shadow:
