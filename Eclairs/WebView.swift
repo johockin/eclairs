@@ -13,7 +13,8 @@ struct WebView: UIViewRepresentable {
 
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.isOpaque = false
-        webView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.98, alpha: 1.0) // #E6E6FA
+        webView.backgroundColor = .clear
+        webView.scrollView.backgroundColor = .clear
         webView.scrollView.isScrollEnabled = true
         webView.scrollView.bounces = false
 

@@ -1,22 +1,23 @@
 /**
  * Éclairs - French Phonics Flashcards
- * Multi-screen SPA: Home, Free Practice, Scored Practice, Config, Stats
+ * Screens: Home, Practice, Config, Stats
  */
 
 (function() {
   'use strict';
 
   // --- State ---
-  var lastSyllable = null;
   var lastColorIndex = -1;
   var lastPracticeItem = null;
   var currentPracticeItem = null;
   var sessionCorrect = 0;
   var sessionTotal = 0;
+  var statsPaused = false;
+  var inputLocked = false;
 
   // --- Routing ---
 
-  var screens = ['home', 'free', 'practice', 'config', 'stats'];
+  var screens = ['home', 'practice', 'config', 'stats'];
 
   function showScreen(id) {
     screens.forEach(function(s) {
@@ -24,13 +25,11 @@
       if (el) el.classList.toggle('active', s === id);
     });
 
-    if (id === 'free') initFreeMode();
     if (id === 'practice') initPracticeMode();
     if (id === 'config') renderConfig();
     if (id === 'stats') renderStats();
 
-    // Reset background for non-practice screens
-    if (id === 'home' || id === 'config' || id === 'stats') {
+    if (id !== 'practice') {
       document.body.style.setProperty('--bg-color', '#E6E6FA');
       document.body.style.setProperty('--text-color', '#4A148C');
       var meta = document.querySelector('meta[name="theme-color"]');
@@ -38,11 +37,9 @@
     }
   }
 
-  function navigate(screen) {
-    showScreen(screen);
-  }
+  function navigate(screen) { showScreen(screen); }
 
-  // --- Color Cycling (shared) ---
+  // --- Color Cycling ---
 
   function getNextColor() {
     if (colorPalettes.length <= 1) return colorPalettes[0] || { bg: '#E6E6FA', text: '#4A148C' };
@@ -61,39 +58,15 @@
   }
 
   // ============================
-  // FREE PRACTICE MODE
-  // ============================
-
-  function initFreeMode() {
-    showNextFree();
-  }
-
-  function getNextSyllable() {
-    if (syllables.length === 0) return 'le';
-    if (syllables.length === 1) return syllables[0];
-    var next, attempts = 0;
-    do {
-      next = syllables[Math.floor(Math.random() * syllables.length)];
-      attempts++;
-    } while (next === lastSyllable && attempts < 10);
-    lastSyllable = next;
-    return next;
-  }
-
-  function showNextFree() {
-    var el = document.getElementById('free-syllable');
-    if (el) el.textContent = getNextSyllable();
-    applyColor(getNextColor());
-  }
-
-  // ============================
-  // SCORED PRACTICE MODE
+  // PRACTICE MODE
   // ============================
 
   function initPracticeMode() {
     sessionCorrect = 0;
     sessionTotal = 0;
+    inputLocked = false;
     updateSessionCounter();
+    updatePauseButton();
     showNextPracticeItem();
   }
 
@@ -115,55 +88,93 @@
     if (!itemId) {
       document.getElementById('practice-syllable').textContent = '?';
       document.getElementById('practice-counter').textContent = 'No items selected';
+      document.getElementById('turn-off-label').textContent = '?';
       return;
     }
     currentPracticeItem = itemId;
     var display = PracticeItems.getDisplay(itemId);
     document.getElementById('practice-syllable').textContent = display;
+    document.getElementById('turn-off-label').textContent = display;
     applyColor(getNextColor());
+    inputLocked = false;
   }
 
   function scorePractice(correct) {
-    if (!currentPracticeItem) return;
+    if (!currentPracticeItem || inputLocked) return;
+    inputLocked = true;
 
-    Storage.recordAttempt(currentPracticeItem, correct);
+    // Record stats (unless paused)
+    if (!statsPaused) {
+      Storage.recordAttempt(currentPracticeItem, correct);
+    }
     sessionTotal++;
     if (correct) sessionCorrect++;
     updateSessionCounter();
 
+    // Sound
     if (correct) {
       SoundEngine.playCorrect();
-      flashFeedback('correct');
     } else {
       SoundEngine.playWrong();
-      flashFeedback('wrong');
     }
 
-    // Brief pause then next item
-    setTimeout(showNextPracticeItem, 350);
+    // Button-level feedback animation
+    var btn = correct ? document.getElementById('btn-correct') : document.getElementById('btn-wrong');
+    btn.classList.add('pop');
+    setTimeout(function() { btn.classList.remove('pop'); }, 250);
+
+    // Next item — fast
+    setTimeout(showNextPracticeItem, 150);
   }
 
   function updateSessionCounter() {
     var el = document.getElementById('practice-counter');
-    if (el) {
-      if (sessionTotal === 0) {
-        el.textContent = 'Ready!';
-      } else {
-        var pct = Math.round((sessionCorrect / sessionTotal) * 100);
-        el.textContent = sessionCorrect + '/' + sessionTotal + ' (' + pct + '%)';
-      }
+    if (!el) return;
+    if (sessionTotal === 0) {
+      el.textContent = 'Ready!';
+    } else {
+      var pct = Math.round((sessionCorrect / sessionTotal) * 100);
+      el.textContent = sessionCorrect + '/' + sessionTotal + ' (' + pct + '%)';
     }
   }
 
-  function flashFeedback(type) {
-    var el = document.getElementById('practice-feedback');
-    if (!el) return;
-    el.className = 'feedback-flash ' + type;
-    el.textContent = type === 'correct' ? '\u2713' : '\u2717';
-    // Force reflow then animate
-    el.offsetWidth;
-    el.classList.add('show');
-    setTimeout(function() { el.classList.remove('show'); }, 300);
+  // --- Pause Stats ---
+
+  function togglePauseStats() {
+    statsPaused = !statsPaused;
+    updatePauseButton();
+  }
+
+  function updatePauseButton() {
+    var btn = document.getElementById('btn-pause-stats');
+    if (btn) {
+      btn.textContent = statsPaused ? 'Stats: PAUSED' : 'Stats: ON';
+      btn.classList.toggle('paused', statsPaused);
+    }
+  }
+
+  // --- Turn Off Current Item ---
+
+  function turnOffCurrentItem() {
+    if (!currentPracticeItem) return;
+    var selected = Storage.getSelectedItems();
+    var filtered = selected.filter(function(id) { return id !== currentPracticeItem; });
+
+    if (filtered.length === 0) {
+      // Can't turn off the last one
+      var btn = document.getElementById('btn-turn-off');
+      if (btn) {
+        btn.textContent = "Can't turn off last item!";
+        setTimeout(function() {
+          btn.innerHTML = 'Turn off "<span id="turn-off-label">' +
+            PracticeItems.getDisplay(currentPracticeItem) + '</span>"';
+        }, 1500);
+      }
+      return;
+    }
+
+    Storage.setSelectedItems(filtered);
+    showNextPracticeItem();
   }
 
   // ============================
@@ -215,7 +226,6 @@
     });
 
     if (selected.length === 0) {
-      // Flash warning
       var msg = document.getElementById('config-message');
       if (msg) {
         msg.textContent = 'Select at least one item!';
@@ -235,13 +245,15 @@
   }
 
   function selectAllConfig() {
-    var buttons = document.querySelectorAll('#config-list .config-item');
-    buttons.forEach(function(btn) { btn.classList.add('selected'); });
+    document.querySelectorAll('#config-list .config-item').forEach(function(btn) {
+      btn.classList.add('selected');
+    });
   }
 
   function clearAllConfig() {
-    var buttons = document.querySelectorAll('#config-list .config-item');
-    buttons.forEach(function(btn) { btn.classList.remove('selected'); });
+    document.querySelectorAll('#config-list .config-item').forEach(function(btn) {
+      btn.classList.remove('selected');
+    });
   }
 
   // ============================
@@ -259,13 +271,12 @@
       html = '<div class="stats-empty">' +
         '<div class="stats-empty-icon">📊</div>' +
         '<p>No stats yet!</p>' +
-        '<p class="stats-empty-sub">Practice in scored mode to start tracking.</p>' +
+        '<p class="stats-empty-sub">Practice to start tracking.</p>' +
         '</div>';
       container.innerHTML = html;
       return;
     }
 
-    // Overall summary card
     html += '<div class="stats-summary">';
     html += '<div class="stats-big-number">' + summary.overallPct + '%</div>';
     html += '<div class="stats-big-label">Career Accuracy</div>';
@@ -286,7 +297,6 @@
     }
     html += '</div>';
 
-    // Per-item breakdown
     var board = Storage.getLeaderboard();
     html += '<div class="stats-table">';
     html += '<div class="stats-table-header">';
@@ -310,7 +320,6 @@
 
     html += '</div>';
 
-    // Streak info
     board.forEach(function(entry) {
       if (entry.bestStreak >= 3) {
         html += '<div class="stats-streak">' +
@@ -334,59 +343,47 @@
   // ============================
 
   function init() {
-    // Navigation buttons
+    // Navigation
     document.querySelectorAll('[data-nav]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
         navigate(btn.getAttribute('data-nav'));
       });
     });
 
-    // Free practice: tap anywhere on display area
-    var freeArea = document.getElementById('screen-free');
-    if (freeArea) {
-      freeArea.addEventListener('click', function(e) {
-        if (e.target.hasAttribute('data-nav')) return;
-        showNextFree();
-      });
-    }
-
-    // Scored practice buttons
-    var correctBtn = document.getElementById('btn-correct');
-    var wrongBtn = document.getElementById('btn-wrong');
-    if (correctBtn) correctBtn.addEventListener('click', function(e) {
+    // Score buttons
+    document.getElementById('btn-correct').addEventListener('click', function(e) {
       e.stopPropagation();
       scorePractice(true);
     });
-    if (wrongBtn) wrongBtn.addEventListener('click', function(e) {
+    document.getElementById('btn-wrong').addEventListener('click', function(e) {
       e.stopPropagation();
       scorePractice(false);
     });
 
-    // Config actions
-    var saveBtn = document.getElementById('btn-config-save');
-    if (saveBtn) saveBtn.addEventListener('click', saveConfig);
+    // Toolbar
+    document.getElementById('btn-pause-stats').addEventListener('click', function(e) {
+      e.stopPropagation();
+      togglePauseStats();
+    });
+    document.getElementById('btn-turn-off').addEventListener('click', function(e) {
+      e.stopPropagation();
+      turnOffCurrentItem();
+    });
 
-    var resetBtn = document.getElementById('btn-config-reset');
-    if (resetBtn) resetBtn.addEventListener('click', resetConfigDefaults);
+    // Config
+    document.getElementById('btn-config-save').addEventListener('click', saveConfig);
+    document.getElementById('btn-config-reset').addEventListener('click', resetConfigDefaults);
+    document.getElementById('btn-config-all').addEventListener('click', selectAllConfig);
+    document.getElementById('btn-config-clear').addEventListener('click', clearAllConfig);
 
-    var selectAllBtn = document.getElementById('btn-config-all');
-    if (selectAllBtn) selectAllBtn.addEventListener('click', selectAllConfig);
-
-    var clearBtn = document.getElementById('btn-config-clear');
-    if (clearBtn) clearBtn.addEventListener('click', clearAllConfig);
-
-    // Keyboard support (free mode mainly)
+    // Keyboard
     document.addEventListener('keydown', function(e) {
       var active = document.querySelector('.screen.active');
       if (!active) return;
       var screenId = active.id.replace('screen-', '');
 
-      if (screenId === 'free') {
-        if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {
-          e.preventDefault();
-          showNextFree();
-        }
-      } else if (screenId === 'practice') {
+      if (screenId === 'practice') {
         if (e.key === 'ArrowRight' || e.key === 'Enter') {
           e.preventDefault();
           scorePractice(true);
@@ -395,19 +392,15 @@
           scorePractice(false);
         }
       }
-
-      // Escape to go home
       if (e.key === 'Escape') {
         e.preventDefault();
         navigate('home');
       }
     });
 
-    // Start on home screen
     showScreen('home');
   }
 
-  // Boot
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

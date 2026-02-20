@@ -19,13 +19,9 @@
       <p class="home-subtitle">French Phonics Practice</p>
 
       <div class="home-buttons">
-        <button class="home-btn home-btn-primary" data-nav="free">
-          <span class="home-btn-icon">✦</span>
-          <span>Free Practice</span>
-        </button>
-        <button class="home-btn home-btn-scored" data-nav="practice">
+        <button class="home-btn home-btn-primary" data-nav="practice">
           <span class="home-btn-icon">★</span>
-          <span>Scored Practice</span>
+          <span>Practice</span>
         </button>
         <button class="home-btn home-btn-stats" data-nav="stats">
           <span class="home-btn-icon">▣</span>
@@ -39,21 +35,11 @@
     </div>
   </div>
 
-  <!-- ============ FREE PRACTICE ============ -->
-  <div class="screen" id="screen-free">
-    <button class="back-btn" data-nav="home">← Back</button>
-    <div class="practice-container">
-      <div class="syllable-display" id="free-syllable">le</div>
-      <p class="tap-hint">Tap anywhere for next</p>
-    </div>
-  </div>
-
-  <!-- ============ SCORED PRACTICE ============ -->
+  <!-- ============ PRACTICE ============ -->
   <div class="screen" id="screen-practice">
     <button class="back-btn" data-nav="home">← Back</button>
     <div class="practice-container">
       <div class="syllable-display" id="practice-syllable">b</div>
-      <div id="practice-feedback" class="feedback-flash"></div>
       <div class="score-buttons">
         <button class="score-btn score-wrong" id="btn-wrong" aria-label="Wrong">
           <span class="score-icon">✗</span>
@@ -63,6 +49,10 @@
         </button>
       </div>
       <div class="session-counter" id="practice-counter">Ready!</div>
+    </div>
+    <div class="practice-toolbar">
+      <button class="toolbar-btn" id="btn-turn-off">Turn off "<span id="turn-off-label">b</span>"</button>
+      <button class="toolbar-btn" id="btn-pause-stats">Stats: ON</button>
     </div>
   </div>
 

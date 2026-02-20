@@ -220,6 +220,22 @@ python -m http.server 8000
 - **Result**: Working prototype ready for Xcode testing
 - **Status**: Phase 1 complete, ready for Phase 2 (testing & polish)
 
+### 2026-02-20 (UX Feedback Pass: Snappiness, Feedback, Toolbar)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Removed free practice mode — only scored practice now, home screen simplified to 3 buttons
+  2. Fixed gray line at bottom — set WKWebView + scrollView backgroundColor to .clear, added background-color to html/screen elements, toolbar uses safe-area-inset-bottom
+  3. Replaced full-screen feedback overlay with button-level pop animation (scale 1.25x + color glow ring on the pressed button)
+  4. Made interactions snappier — reduced next-item delay from 350ms to 150ms, tightened all CSS transitions from 0.15s to 0.06-0.1s, added will-change:transform and input locking to prevent double-taps
+  5. Added "Pause Stats" toggle at bottom of practice screen — subtle, 0.25 opacity, toggles recording to localStorage
+  6. Added "Turn off [item]" button at bottom of practice screen — removes current item from selected set, immediately shows next
+- **Files Modified**:
+  - `Eclairs/Web/index.html` — removed free practice screen, added toolbar div
+  - `Eclairs/Web/css/style.css` — removed free practice styles, added btn-pop keyframes, toolbar styles, fixed backgrounds
+  - `Eclairs/Web/js/app.js` — removed free practice code, added pause/turn-off logic, input locking, faster transitions
+  - `Eclairs/WebView.swift` — backgroundColor set to .clear
+- **Status**: Ready for re-test in Xcode
+
 ### 2026-02-19 (Xcode Project Opened & Configured)
 - **Claude Instance**: Claude Opus 4
 - **Action**: User opened Eclairs.xcodeproj in Xcode; Xcode auto-configured project settings

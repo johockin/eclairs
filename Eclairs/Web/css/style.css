@@ -12,11 +12,15 @@ html, body {
   touch-action: manipulation;
 }
 
+html {
+  background-color: var(--bg-color, #E6E6FA);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color, #E6E6FA);
   color: var(--text-color, #4A148C);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.1s ease, color 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -27,6 +31,7 @@ body {
   inset: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background-color: var(--bg-color, #E6E6FA);
 }
 .screen.active { display: flex; }
 
@@ -99,7 +104,7 @@ body {
   color: #fff;
   touch-action: manipulation;
   user-select: none;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 .home-btn:active {
   transform: translateY(3px);
@@ -111,10 +116,6 @@ body {
   background: linear-gradient(180deg, #FF6B9D 0%, #E84A7F 100%);
   box-shadow: 0 4px 0 #C13A63, 0 6px 4px rgba(0,0,0,0.12);
 }
-.home-btn-scored {
-  background: linear-gradient(180deg, #7C4DFF 0%, #651FFF 100%);
-  box-shadow: 0 4px 0 #4A148C, 0 6px 4px rgba(0,0,0,0.12);
-}
 .home-btn-stats {
   background: linear-gradient(180deg, #26C6DA 0%, #00ACC1 100%);
   box-shadow: 0 4px 0 #00838F, 0 6px 4px rgba(0,0,0,0.12);
@@ -125,16 +126,16 @@ body {
 }
 
 /* =======================
-   PRACTICE SCREENS (shared)
+   PRACTICE SCREEN
    ======================= */
 .practice-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100%;
-  min-height: 100dvh;
+  flex: 1;
   padding: 2rem;
+  padding-bottom: 0;
   gap: 1.5rem;
   width: 100%;
 }
@@ -146,18 +147,12 @@ body {
   text-align: center;
   line-height: 1.2;
   letter-spacing: 0.02em;
-  transition: color 0.15s ease;
+  transition: color 0.1s ease;
   user-select: none;
 }
 
-.tap-hint {
-  font-size: 0.9rem;
-  opacity: 0.4;
-  margin-top: 1rem;
-}
-
 /* =======================
-   SCORE BUTTONS (Scored Practice)
+   SCORE BUTTONS
    ======================= */
 .score-buttons {
   display: flex;
@@ -176,11 +171,12 @@ body {
   justify-content: center;
   touch-action: manipulation;
   user-select: none;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+  will-change: transform;
 }
 
 .score-btn:active {
-  transform: translateY(3px) scale(0.95);
+  transform: translateY(3px) scale(0.92);
 }
 
 .score-icon {
@@ -210,24 +206,23 @@ body {
     inset 0 2px 0 rgba(255,255,255,0.3);
 }
 
-/* Feedback flash */
-.feedback-flash {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  font-size: 6rem;
-  font-weight: 800;
-  pointer-events: none;
-  opacity: 0;
-  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
-  z-index: 100;
+/* Button pop animation (on score) */
+@keyframes btn-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.25); }
+  100% { transform: scale(1); }
 }
-.feedback-flash.correct { color: #43A047; }
-.feedback-flash.wrong { color: #E53935; }
-.feedback-flash.show {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 0.5;
+
+.score-btn.pop {
+  animation: btn-pop 0.25s ease-out;
+}
+.score-correct.pop {
+  box-shadow: 0 0 0 8px rgba(67, 160, 71, 0.3), 0 5px 0 #2E7D32,
+    inset 0 2px 0 rgba(255,255,255,0.3);
+}
+.score-wrong.pop {
+  box-shadow: 0 0 0 8px rgba(229, 57, 53, 0.3), 0 5px 0 #C62828,
+    inset 0 2px 0 rgba(255,255,255,0.3);
 }
 
 .session-counter {
@@ -235,6 +230,37 @@ body {
   font-weight: 600;
   opacity: 0.6;
   margin-top: 0.5rem;
+}
+
+/* =======================
+   PRACTICE TOOLBAR (bottom)
+   ======================= */
+.practice-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
+  width: 100%;
+}
+
+.toolbar-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--text-color, #4A148C);
+  opacity: 0.25;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.toolbar-btn:active {
+  opacity: 0.6;
+}
+.toolbar-btn.paused {
+  opacity: 0.5;
+  font-weight: 600;
 }
 
 /* =======================
@@ -247,9 +273,7 @@ body {
   padding: max(60px, calc(env(safe-area-inset-top, 12px) + 48px)) 20px 100px;
 }
 
-.config-header {
-  margin-bottom: 16px;
-}
+.config-header { margin-bottom: 16px; }
 
 .config-title {
   font-size: 1.6rem;
@@ -302,9 +326,9 @@ body {
   background: rgba(255,255,255,0.5);
   color: var(--text-color, #4A148C);
   cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, transform 0.1s;
+  transition: background 0.08s, border-color 0.08s, transform 0.06s;
 }
-.config-item:active { transform: scale(0.95); }
+.config-item:active { transform: scale(0.93); }
 .config-item.selected {
   background: var(--text-color, #4A148C);
   color: #fff;
@@ -335,7 +359,7 @@ body {
   border-radius: 14px;
   cursor: pointer;
   box-shadow: 0 4px 0 #4A148C, 0 6px 4px rgba(0,0,0,0.12);
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition: transform 0.08s, box-shadow 0.08s;
 }
 .save-btn:active {
   transform: translateY(3px);
@@ -368,7 +392,6 @@ body {
 .stats-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
 .stats-empty-sub { font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem; }
 
-/* Summary card */
 .stats-summary {
   background: rgba(255,255,255,0.4);
   border-radius: 16px;
@@ -406,7 +429,6 @@ body {
 .stats-highlight.good { background: rgba(67, 160, 71, 0.15); }
 .stats-highlight.weak { background: rgba(229, 57, 53, 0.15); }
 
-/* Stats table */
 .stats-table {
   background: rgba(255,255,255,0.3);
   border-radius: 12px;
@@ -490,6 +512,7 @@ body {
   .score-wrong:hover { filter: brightness(1.08); }
   .config-item:hover { border-color: rgba(0,0,0,0.3); }
   .save-btn:hover { filter: brightness(1.05); }
+  .toolbar-btn:hover { opacity: 0.45; }
 }
 
 /* Focus states for accessibility */
