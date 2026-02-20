@@ -12,79 +12,66 @@
 </head>
 <body>
 
-  <!-- ============ HOME SCREEN ============ -->
+  <!-- ============ HOME ============ -->
   <div class="screen active" id="screen-home">
     <div class="home-container">
       <h1 class="home-title">Éclairs</h1>
-      <p class="home-subtitle">French Phonics Practice</p>
-
-      <div class="home-buttons">
-        <button class="home-btn home-btn-primary" data-nav="practice">
-          <span class="home-btn-icon">★</span>
-          <span>Practice</span>
-        </button>
-        <button class="home-btn home-btn-stats" data-nav="stats">
-          <span class="home-btn-icon">▣</span>
-          <span>Stats</span>
-        </button>
-        <button class="home-btn home-btn-config" data-nav="config">
-          <span class="home-btn-icon">⚙</span>
-          <span>Practice Items</span>
-        </button>
+      <p class="home-subtitle">French Phonics</p>
+      <div class="home-nav">
+        <button class="glass-btn glass-btn-large" data-nav="practice">Practice</button>
+        <div class="home-nav-row">
+          <button class="glass-btn" data-nav="stats">Stats</button>
+          <button class="glass-btn" data-nav="config">Settings</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ============ PRACTICE ============ -->
   <div class="screen" id="screen-practice">
-    <button class="back-btn" data-nav="home">← Back</button>
-    <div class="practice-container">
+    <button class="back-btn" data-nav="home">Back</button>
+    <div class="practice-area">
       <div class="syllable-display" id="practice-syllable">b</div>
+    </div>
+    <div class="practice-controls">
       <div class="score-buttons">
-        <button class="score-btn score-wrong" id="btn-wrong" aria-label="Wrong">
-          <span class="score-icon">✗</span>
-        </button>
-        <button class="score-btn score-correct" id="btn-correct" aria-label="Correct">
-          <span class="score-icon">✓</span>
-        </button>
+        <button class="score-btn score-wrong" id="btn-wrong" aria-label="Wrong">✗</button>
+        <button class="score-btn score-correct" id="btn-correct" aria-label="Correct">✓</button>
       </div>
-      <div class="session-counter" id="practice-counter">Ready!</div>
+      <div class="session-counter" id="practice-counter"></div>
     </div>
     <div class="practice-toolbar">
-      <button class="toolbar-btn" id="btn-turn-off">Turn off "<span id="turn-off-label">b</span>"</button>
-      <button class="toolbar-btn" id="btn-pause-stats">Stats: ON</button>
+      <button class="toolbar-btn" id="btn-turn-off">Turn off <span id="turn-off-label">b</span></button>
+      <button class="toolbar-btn" id="btn-pause-stats">Stats on</button>
     </div>
   </div>
 
-  <!-- ============ CONFIG SCREEN ============ -->
+  <!-- ============ CONFIG ============ -->
   <div class="screen" id="screen-config">
-    <div class="config-container">
-      <div class="config-header">
-        <button class="back-btn" data-nav="home">← Back</button>
-        <h2 class="config-title">Practice Items</h2>
+    <div class="scroll-container">
+      <div class="screen-inner">
+        <button class="back-btn" data-nav="home">Back</button>
+        <h2 class="screen-title">Practice Items</h2>
+        <div class="config-actions">
+          <button class="pill-btn" id="btn-config-all">All</button>
+          <button class="pill-btn" id="btn-config-clear">None</button>
+          <button class="pill-btn" id="btn-config-reset">Defaults</button>
+        </div>
+        <div id="config-list" class="config-list"></div>
+        <div id="config-message" class="config-message"></div>
+        <button class="glass-btn glass-btn-large glass-btn-save" id="btn-config-save">Save</button>
       </div>
-
-      <div class="config-actions">
-        <button class="config-action-btn" id="btn-config-all">All</button>
-        <button class="config-action-btn" id="btn-config-clear">None</button>
-        <button class="config-action-btn" id="btn-config-reset">Defaults</button>
-      </div>
-
-      <div id="config-list" class="config-list"></div>
-      <div id="config-message" class="config-message"></div>
-
-      <button class="save-btn" id="btn-config-save">Save & Go Back</button>
     </div>
   </div>
 
-  <!-- ============ STATS SCREEN ============ -->
+  <!-- ============ STATS ============ -->
   <div class="screen" id="screen-stats">
-    <div class="stats-container">
-      <div class="stats-header">
-        <button class="back-btn" data-nav="home">← Back</button>
-        <h2 class="stats-title">Player Stats</h2>
+    <div class="scroll-container">
+      <div class="screen-inner">
+        <button class="back-btn" data-nav="home">Back</button>
+        <h2 class="screen-title">Stats</h2>
+        <div id="stats-content" class="stats-content"></div>
       </div>
-      <div id="stats-content" class="stats-content"></div>
     </div>
   </div>
 

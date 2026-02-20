@@ -248,6 +248,24 @@ python -m http.server 8000
   - Updated LastUpgradeCheck to 2620
 - **Status**: Project builds in Xcode, ready for simulator testing
 
+### 2026-02-20 (Apple-Quality Design Overhaul)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Complete CSS rewrite with glassmorphism design system (backdrop-filter: blur, glass panels, subtle shadows)
+  2. CSS custom properties for theming (--glass, --glass-border, --glass-strong, --shadow, --radius)
+  3. Replaced cartoon 3D buttons with frosted glass panels and generous negative space
+  4. Refined score button animation from bouncy `.pop` to subtle `.pulse` (scale 1.08 max, 0.2s ease-out)
+  5. Added two-tap confirmation for "Turn off" button (first tap → "Tap again to confirm", auto-resets after 3s)
+  6. Cleaned up pause stats button text ("Stats on" / "Stats paused" — lowercase, no colon)
+  7. Updated HTML structure: removed icons from buttons, cleaner class names
+  8. Added `.confirm` toolbar button state for turn-off confirmation visual feedback
+- **Files Modified**:
+  - `Eclairs/Web/css/style.css` — Full glassmorphism rewrite
+  - `Eclairs/Web/index.html` — Cleaner structure, glass-btn classes, toolbar
+  - `Eclairs/Web/js/app.js` — `.pop` → `.pulse`, two-tap turn-off, cleaner text
+- **Design Philosophy**: "It looks like Apple made this app" — monochrome palettes, negative space, frosted glass, zero cartoon elements
+- **Status**: Ready for re-test in Xcode
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template

@@ -94,9 +94,12 @@
     currentPracticeItem = itemId;
     var display = PracticeItems.getDisplay(itemId);
     document.getElementById('practice-syllable').textContent = display;
-    document.getElementById('turn-off-label').textContent = display;
     applyColor(getNextColor());
     inputLocked = false;
+    // Reset turn-off confirmation state for new item
+    turnOffConfirmItem = null;
+    clearTimeout(turnOffTimer);
+    resetTurnOffButton();
   }
 
   function scorePractice(correct) {
@@ -120,8 +123,8 @@
 
     // Button-level feedback animation
     var btn = correct ? document.getElementById('btn-correct') : document.getElementById('btn-wrong');
-    btn.classList.add('pop');
-    setTimeout(function() { btn.classList.remove('pop'); }, 250);
+    btn.classList.add('pulse');
+    setTimeout(function() { btn.classList.remove('pulse'); }, 250);
 
     // Next item — fast
     setTimeout(showNextPracticeItem, 150);
@@ -148,33 +151,60 @@
   function updatePauseButton() {
     var btn = document.getElementById('btn-pause-stats');
     if (btn) {
-      btn.textContent = statsPaused ? 'Stats: PAUSED' : 'Stats: ON';
+      btn.textContent = statsPaused ? 'Stats paused' : 'Stats on';
       btn.classList.toggle('paused', statsPaused);
     }
   }
 
-  // --- Turn Off Current Item ---
+  // --- Turn Off Current Item (two-tap confirmation) ---
+
+  var turnOffConfirmItem = null;
+  var turnOffTimer = null;
 
   function turnOffCurrentItem() {
     if (!currentPracticeItem) return;
+    var btn = document.getElementById('btn-turn-off');
+    if (!btn) return;
+
     var selected = Storage.getSelectedItems();
     var filtered = selected.filter(function(id) { return id !== currentPracticeItem; });
 
     if (filtered.length === 0) {
-      // Can't turn off the last one
-      var btn = document.getElementById('btn-turn-off');
-      if (btn) {
-        btn.textContent = "Can't turn off last item!";
-        setTimeout(function() {
-          btn.innerHTML = 'Turn off "<span id="turn-off-label">' +
-            PracticeItems.getDisplay(currentPracticeItem) + '</span>"';
-        }, 1500);
-      }
+      btn.textContent = "Can't — last item";
+      btn.classList.add('confirm');
+      setTimeout(function() {
+        resetTurnOffButton();
+      }, 1500);
       return;
     }
 
+    // First tap — ask for confirmation
+    if (turnOffConfirmItem !== currentPracticeItem) {
+      turnOffConfirmItem = currentPracticeItem;
+      btn.textContent = 'Tap again to confirm';
+      btn.classList.add('confirm');
+      clearTimeout(turnOffTimer);
+      turnOffTimer = setTimeout(function() {
+        resetTurnOffButton();
+      }, 3000);
+      return;
+    }
+
+    // Second tap — confirmed, turn it off
+    clearTimeout(turnOffTimer);
+    turnOffConfirmItem = null;
     Storage.setSelectedItems(filtered);
     showNextPracticeItem();
+  }
+
+  function resetTurnOffButton() {
+    turnOffConfirmItem = null;
+    var btn = document.getElementById('btn-turn-off');
+    if (btn && currentPracticeItem) {
+      btn.innerHTML = 'Turn off <span id="turn-off-label">' +
+        PracticeItems.getDisplay(currentPracticeItem) + '</span>';
+      btn.classList.remove('confirm');
+    }
   }
 
   // ============================
