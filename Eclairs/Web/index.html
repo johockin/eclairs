@@ -14,25 +14,57 @@
 
   <!-- ============ HOME ============ -->
   <div class="screen active" id="screen-home">
-    <div class="home-container">
-      <h1 class="home-title">Éclairs</h1>
-      <p class="home-subtitle">French Phonics</p>
-      <div class="home-nav">
-        <button class="glass-btn glass-btn-large" data-nav="practice">Practice</button>
-        <div class="home-nav-row">
-          <button class="glass-btn" data-nav="stats">Stats</button>
-          <button class="glass-btn" data-nav="config">Settings</button>
+    <div class="flipper" id="flipper">
+      <div class="flip-card" id="flip-card">
+        <!-- FRONT: Phonics -->
+        <div class="flip-face flip-front">
+          <div class="home-container">
+            <h1 class="home-title">Éclairs</h1>
+            <p class="home-subtitle">French Phonics</p>
+            <div class="home-nav">
+              <button class="glass-btn glass-btn-large" data-nav="practice">Practice</button>
+              <div class="home-nav-row">
+                <button class="glass-btn" data-nav="stats">Stats</button>
+                <button class="glass-btn" data-nav="config">Settings</button>
+              </div>
+            </div>
+          </div>
+          <div class="song-picker" id="song-picker-phonics">
+            <button class="song-btn song-btn-phonics active" data-song="0">Bouncy</button>
+            <button class="song-btn song-btn-phonics" data-song="1">Mellow</button>
+            <button class="song-btn song-btn-phonics" data-song="2">Jazzy</button>
+          </div>
+        </div>
+
+        <!-- BACK: Numbers -->
+        <div class="flip-face flip-back">
+          <div class="home-container">
+            <h1 class="home-title">Éclairs</h1>
+            <p class="home-subtitle">Les Nombres</p>
+            <div class="home-nav">
+              <button class="glass-btn glass-btn-large" data-nav="numbers-practice">Practice</button>
+              <div class="home-nav-row">
+                <button class="glass-btn" data-nav="numbers-stats">Stats</button>
+                <button class="glass-btn" data-nav="numbers-config">Settings</button>
+              </div>
+            </div>
+          </div>
+          <div class="song-picker" id="song-picker-numbers">
+            <button class="song-btn song-btn-numbers active" data-song="3">Calculator</button>
+            <button class="song-btn song-btn-numbers" data-song="4">Abacus</button>
+            <button class="song-btn song-btn-numbers" data-song="5">Clockwork</button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="song-picker" id="song-picker">
-      <button class="song-btn active" data-song="0">Bouncy</button>
-      <button class="song-btn" data-song="1">Mellow</button>
-      <button class="song-btn" data-song="2">Jazzy</button>
-    </div>
+
+    <!-- Mode switch (outside flip card, always visible) -->
+    <button class="mode-switch" id="mode-switch">
+      <span class="mode-label" id="mode-label">Nombres</span>
+    </button>
   </div>
 
-  <!-- ============ PRACTICE ============ -->
+  <!-- ============ PRACTICE (shared for both modes) ============ -->
   <div class="screen" id="screen-practice">
     <button class="back-btn" data-nav="home">Back</button>
     <div class="practice-area">
@@ -51,7 +83,7 @@
     </div>
   </div>
 
-  <!-- ============ CONFIG ============ -->
+  <!-- ============ PHONICS CONFIG ============ -->
   <div class="screen" id="screen-config">
     <div class="scroll-container">
       <div class="screen-inner">
@@ -69,7 +101,7 @@
     </div>
   </div>
 
-  <!-- ============ STATS ============ -->
+  <!-- ============ PHONICS STATS ============ -->
   <div class="screen" id="screen-stats">
     <div class="scroll-container">
       <div class="screen-inner">
@@ -80,7 +112,37 @@
     </div>
   </div>
 
+  <!-- ============ NUMBERS CONFIG ============ -->
+  <div class="screen" id="screen-numbers-config">
+    <div class="scroll-container">
+      <div class="screen-inner">
+        <button class="back-btn" data-nav="home">Back</button>
+        <h2 class="screen-title">Number Tiers</h2>
+        <div class="config-actions">
+          <button class="pill-btn" id="btn-numconfig-all">All</button>
+          <button class="pill-btn" id="btn-numconfig-clear">None</button>
+          <button class="pill-btn" id="btn-numconfig-reset">Defaults</button>
+        </div>
+        <div id="numconfig-list" class="config-list"></div>
+        <div id="numconfig-message" class="config-message"></div>
+        <button class="glass-btn glass-btn-large glass-btn-save" id="btn-numconfig-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NUMBERS STATS ============ -->
+  <div class="screen" id="screen-numbers-stats">
+    <div class="scroll-container">
+      <div class="screen-inner">
+        <button class="back-btn" data-nav="home">Back</button>
+        <h2 class="screen-title">Number Stats</h2>
+        <div id="numbers-stats-content" class="stats-content"></div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/syllables.js"></script>
+  <script src="js/numbers.js"></script>
   <script src="js/haptics.js"></script>
   <script src="js/sounds.js"></script>
   <script src="js/music.js"></script>
