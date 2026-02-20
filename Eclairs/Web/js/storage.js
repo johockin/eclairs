@@ -208,6 +208,74 @@ var Storage = (function() {
     };
   }
 
+  /**
+   * Calculate mastery score (0-100) for an item.
+   * Based on last 20 attempts, weighted toward recent performance.
+   * Decays if item hasn't been seen recently.
+   */
+  function getMastery(item) {
+    var all = getAttempts();
+    var itemAttempts = all.filter(function(a) { return a.item === item; });
+
+    // Never seen → mastery 0
+    if (itemAttempts.length === 0) return { mastery: 0, weight: 3 };
+
+    // Last 20 attempts, most recent first
+    var recent = itemAttempts.slice(-20);
+    var total = recent.length;
+
+    // Weighted accuracy: recent attempts count more
+    var weightedCorrect = 0;
+    var weightedTotal = 0;
+    for (var i = 0; i < total; i++) {
+      var recency = (i + 1) / total; // 0.05..1.0 (later = more weight)
+      weightedTotal += recency;
+      if (recent[i].correct) weightedCorrect += recency;
+    }
+    var accuracy = weightedTotal > 0 ? weightedCorrect / weightedTotal : 0;
+
+    // Streak bonus: consecutive correct at the end boosts mastery
+    var streak = 0;
+    for (var j = recent.length - 1; j >= 0; j--) {
+      if (recent[j].correct) streak++;
+      else break;
+    }
+    var streakBonus = Math.min(streak * 3, 20); // up to +20 for 7+ streak
+
+    // Base mastery from accuracy (0-80) + streak bonus (0-20)
+    var mastery = Math.round(accuracy * 80 + streakBonus);
+    mastery = Math.min(100, Math.max(0, mastery));
+
+    // Decay: if not seen in a while, pull mastery down to retest
+    var lastSeen = itemAttempts[itemAttempts.length - 1].ts;
+    var daysSince = (Date.now() - lastSeen) / (24 * 60 * 60 * 1000);
+    if (daysSince > 3) {
+      var decay = Math.min((daysSince - 3) * 5, 40); // lose up to 40 pts
+      mastery = Math.max(0, mastery - Math.round(decay));
+    }
+
+    // Weight: low mastery = high weight (appears more)
+    // mastery 0 → weight 5, mastery 100 → weight 0.5
+    var weight = 0.5 + 4.5 * (1 - mastery / 100);
+
+    // Minimum sample boost: fewer than 5 attempts → bump weight
+    if (total < 5) {
+      weight = Math.max(weight, 3);
+    }
+
+    return { mastery: mastery, weight: weight };
+  }
+
+  /**
+   * Get weights for all selected items (for weighted random selection)
+   */
+  function getWeights(selectedItems) {
+    return selectedItems.map(function(id) {
+      var m = getMastery(id);
+      return { item: id, mastery: m.mastery, weight: m.weight };
+    });
+  }
+
   function clearStats() {
     localStorage.removeItem(ATTEMPTS_KEY);
   }
@@ -225,6 +293,8 @@ var Storage = (function() {
     getSummary: getSummary,
     getSelectedItems: getSelectedItems,
     setSelectedItems: setSelectedItems,
+    getMastery: getMastery,
+    getWeights: getWeights,
     clearStats: clearStats,
     clearAllData: clearAllData
   };

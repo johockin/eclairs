@@ -82,9 +82,21 @@
     var selected = Storage.getSelectedItems();
     if (selected.length === 0) return null;
     if (selected.length === 1) return selected[0];
+
+    // Weighted random: struggling items appear more often
+    var weights = Storage.getWeights(selected);
+    var totalWeight = 0;
+    for (var i = 0; i < weights.length; i++) totalWeight += weights[i].weight;
+
     var next, attempts = 0;
     do {
-      next = selected[Math.floor(Math.random() * selected.length)];
+      var r = Math.random() * totalWeight;
+      var cumulative = 0;
+      next = weights[0].item;
+      for (var j = 0; j < weights.length; j++) {
+        cumulative += weights[j].weight;
+        if (r <= cumulative) { next = weights[j].item; break; }
+      }
       attempts++;
     } while (next === lastPracticeItem && attempts < 10);
     lastPracticeItem = next;
@@ -339,6 +351,7 @@
     html += '<div class="stats-table">';
     html += '<div class="stats-table-header">';
     html += '<span class="stats-col-item">Item</span>';
+    html += '<span class="stats-col-mastery"></span>';
     html += '<span class="stats-col">Career</span>';
     html += '<span class="stats-col">30d</span>';
     html += '<span class="stats-col">7d</span>';
@@ -347,8 +360,11 @@
 
     board.forEach(function(entry) {
       var itemStats = Storage.getStats(entry.item);
+      var m = Storage.getMastery(entry.item);
       html += '<div class="stats-table-row">';
       html += '<span class="stats-col-item stats-item-name">' + PracticeItems.getDisplay(entry.item) + '</span>';
+      html += '<span class="stats-col-mastery"><span class="mastery-bar"><span class="mastery-fill' +
+        (m.mastery >= 80 ? ' mastered' : '') + '" style="width:' + m.mastery + '%"></span></span></span>';
       html += renderStatCell(itemStats.career);
       html += renderStatCell(itemStats.last30);
       html += renderStatCell(itemStats.last7);

@@ -586,6 +586,29 @@ body {
 }
 .stats-item-name { font-size: 1.05rem; }
 
+/* Mastery bar */
+.stats-col-mastery {
+  flex: 0 0 32px;
+  padding: 0 4px;
+}
+.mastery-bar {
+  display: block;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.mastery-fill {
+  display: block;
+  height: 100%;
+  background: #EF6C00;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.mastery-fill.mastered {
+  background: #388E3C;
+}
+
 .stats-na { opacity: 0.2; }
 .stats-good { color: #388E3C; }
 .stats-mid { color: #EF6C00; }
