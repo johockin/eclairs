@@ -1,6 +1,7 @@
 /**
- * Éclairs — Apple-quality design
- * Glassmorphism, negative space, system fonts, zero dependencies
+ * Éclairs — Candy Skeuomorphic
+ * Neo-skeuomorphic raised buttons, tactile depth, Dieter Rams meets Kubrick 60s
+ * System fonts, zero dependencies
  */
 
 /* === FOUNDATION === */
@@ -9,12 +10,26 @@
 :root {
   --bg: #E6E6FA;
   --fg: #4A148C;
-  --glass: rgba(255, 255, 255, 0.22);
-  --glass-border: rgba(255, 255, 255, 0.45);
-  --glass-strong: rgba(255, 255, 255, 0.35);
-  --shadow: 0 2px 24px rgba(0, 0, 0, 0.06);
-  --radius: 20px;
-  --radius-sm: 14px;
+
+  /* Skeuomorphic depth system */
+  --btn-bg: rgba(255, 255, 255, 0.55);
+  --btn-border: rgba(0, 0, 0, 0.08);
+  --btn-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --btn-shadow-pressed:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  --panel-bg: rgba(255, 255, 255, 0.45);
+  --panel-border: rgba(0, 0, 0, 0.06);
+  --panel-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  --radius: 12px;
+  --radius-sm: 10px;
 }
 
 html {
@@ -70,25 +85,24 @@ body {
   top: max(16px, env(safe-area-inset-top, 16px));
   left: 20px;
   z-index: 10;
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--btn-shadow);
   font-family: inherit;
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-color, var(--fg));
   cursor: pointer;
   padding: 8px 16px;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 .back-btn:active {
-  transform: scale(0.96);
-  opacity: 0.7;
+  transform: translateY(1px);
+  box-shadow: var(--btn-shadow-pressed);
 }
 
-/* === GLASS BUTTON === */
+/* === RAISED BUTTON (was glass-btn) === */
 .glass-btn {
   display: block;
   width: 100%;
@@ -98,21 +112,19 @@ body {
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-color, var(--fg));
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--btn-shadow);
   cursor: pointer;
   text-align: center;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
   user-select: none;
   touch-action: manipulation;
 }
 .glass-btn:active {
-  transform: scale(0.97);
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
+  transform: translateY(1px);
+  box-shadow: var(--btn-shadow-pressed);
 }
 .glass-btn-large {
   padding: 22px 24px;
@@ -228,9 +240,10 @@ body {
 
 .score-buttons {
   display: flex;
-  gap: 20px;
+  gap: 24px;
 }
 
+/* === SCORE BUTTONS — Candy Skeuomorphic === */
 .score-btn {
   width: 72px;
   height: 72px;
@@ -245,37 +258,53 @@ body {
   color: #fff;
   touch-action: manipulation;
   user-select: none;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
   will-change: transform;
 }
 
 .score-correct {
-  background: rgba(76, 175, 80, 0.85);
-  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.25);
+  background: linear-gradient(180deg, #81C784 0%, #4CAF50 100%);
+  box-shadow:
+    0 3px 8px rgba(76, 175, 80, 0.35),
+    0 6px 20px rgba(76, 175, 80, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
 }
 .score-wrong {
-  background: rgba(229, 115, 115, 0.85);
-  box-shadow: 0 4px 20px rgba(229, 115, 115, 0.25);
+  background: linear-gradient(180deg, #EF9A9A 0%, #E57373 100%);
+  box-shadow:
+    0 3px 8px rgba(229, 115, 115, 0.35),
+    0 6px 20px rgba(229, 115, 115, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
 }
 
 .score-btn:active {
-  transform: scale(0.90);
+  transform: translateY(2px);
+}
+.score-correct:active {
+  box-shadow:
+    0 1px 3px rgba(76, 175, 80, 0.3),
+    inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.score-wrong:active {
+  box-shadow:
+    0 1px 3px rgba(229, 115, 115, 0.3),
+    inset 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 /* Subtle feedback pulse */
 @keyframes score-pulse {
-  0% { transform: scale(1); box-shadow: 0 4px 20px currentColor; }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); box-shadow: 0 4px 20px currentColor; }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 
 .score-correct.pulse {
-  animation: score-pulse 0.2s ease-out;
-  box-shadow: 0 4px 28px rgba(76, 175, 80, 0.4);
+  animation: score-pulse 0.18s ease-out;
 }
 .score-wrong.pulse {
-  animation: score-pulse 0.2s ease-out;
-  box-shadow: 0 4px 28px rgba(229, 115, 115, 0.4);
+  animation: score-pulse 0.18s ease-out;
 }
 
 .session-counter {
@@ -347,20 +376,26 @@ body {
   font-family: inherit;
   font-size: 1.15rem;
   font-weight: 600;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--btn-border);
   border-radius: var(--radius-sm);
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background: var(--btn-bg);
+  box-shadow: var(--btn-shadow);
   color: var(--text-color, var(--fg));
   cursor: pointer;
-  transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
 }
-.config-item:active { transform: scale(0.95); }
+.config-item:active {
+  transform: translateY(1px);
+  box-shadow: var(--btn-shadow-pressed);
+}
 .config-item.selected {
   background: var(--text-color, var(--fg));
   color: var(--bg-color, var(--bg));
   border-color: transparent;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .config-message {
@@ -386,11 +421,10 @@ body {
 .stats-empty-sub { font-size: 0.85rem; margin-top: 6px; }
 
 .stats-summary {
-  background: var(--glass-strong);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
   border-radius: var(--radius);
+  box-shadow: var(--panel-shadow);
   padding: 28px 24px;
   text-align: center;
   margin-bottom: 20px;
@@ -424,18 +458,17 @@ body {
 .stats-highlight {
   font-size: 0.85rem;
   padding: 8px 14px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   margin-top: 8px;
 }
 .stats-highlight.good { background: rgba(76, 175, 80, 0.1); }
 .stats-highlight.weak { background: rgba(229, 115, 115, 0.1); }
 
 .stats-table {
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
   border-radius: var(--radius);
+  box-shadow: var(--panel-shadow);
   overflow: hidden;
   margin-bottom: 16px;
 }
@@ -485,11 +518,10 @@ body {
   font-size: 0.8rem;
   font-weight: 500;
   padding: 10px 14px;
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--panel-shadow);
   margin-bottom: 8px;
 }
 
@@ -507,10 +539,32 @@ body {
 }
 
 @media (hover: hover) {
-  .glass-btn:hover { background: var(--glass-strong); }
-  .score-correct:hover { box-shadow: 0 4px 24px rgba(76, 175, 80, 0.35); }
-  .score-wrong:hover { box-shadow: 0 4px 24px rgba(229, 115, 115, 0.35); }
-  .config-item:hover { border-color: rgba(0, 0, 0, 0.15); }
+  .glass-btn:hover {
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.1),
+      0 6px 16px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  .score-correct:hover {
+    box-shadow:
+      0 4px 12px rgba(76, 175, 80, 0.4),
+      0 8px 24px rgba(76, 175, 80, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  }
+  .score-wrong:hover {
+    box-shadow:
+      0 4px 12px rgba(229, 115, 115, 0.4),
+      0 8px 24px rgba(229, 115, 115, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  }
+  .config-item:hover {
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.1),
+      0 6px 16px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
   .toolbar-btn:hover { opacity: 0.4; }
 }
 

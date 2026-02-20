@@ -251,19 +251,31 @@ python -m http.server 8000
 ### 2026-02-20 (Apple-Quality Design Overhaul)
 - **Claude Instance**: Claude Opus 4
 - **Action**:
-  1. Complete CSS rewrite with glassmorphism design system (backdrop-filter: blur, glass panels, subtle shadows)
-  2. CSS custom properties for theming (--glass, --glass-border, --glass-strong, --shadow, --radius)
-  3. Replaced cartoon 3D buttons with frosted glass panels and generous negative space
-  4. Refined score button animation from bouncy `.pop` to subtle `.pulse` (scale 1.08 max, 0.2s ease-out)
-  5. Added two-tap confirmation for "Turn off" button (first tap → "Tap again to confirm", auto-resets after 3s)
-  6. Cleaned up pause stats button text ("Stats on" / "Stats paused" — lowercase, no colon)
-  7. Updated HTML structure: removed icons from buttons, cleaner class names
-  8. Added `.confirm` toolbar button state for turn-off confirmation visual feedback
+  1. Complete CSS rewrite with glassmorphism design system
+  2. Replaced cartoon 3D buttons with frosted glass panels and generous negative space
+  3. Refined score button animation from bouncy `.pop` to subtle `.pulse` (scale 1.08 max, 0.2s ease-out)
+  4. Added two-tap confirmation for "Turn off" button (first tap → "Tap again to confirm", auto-resets after 3s)
+  5. Updated HTML structure: removed icons from buttons, cleaner class names
+- **Status**: Superseded by candy-skeuomorphic pass below
+
+### 2026-02-20 (Candy Skeuomorphic Button Treatment)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. User provided Splicetable UI reference images (in /_dropbox/) — neo-skeuomorphic raised controls with tactile depth
+  2. Documented "Candy Skeuomorphic" design philosophy in CLAUDE.md Best Practices section
+  3. Rewrote CSS from glassmorphism (backdrop-filter blur) to skeuomorphic depth system:
+     - Multi-layer box-shadows: outer depth + inset top highlight + inset bottom shadow
+     - `translateY(1px)` press instead of `scale(0.97)` — feels like pushing a real button
+     - Score buttons: vertical gradient (light→saturated) + inset highlight rim + bottom shadow edge
+     - Crisp 1px borders `rgba(0,0,0,0.08)` instead of blurry white glass borders
+     - Reduced border-radius from 20px to 12px (more mechanical, precise)
+     - Removed all `backdrop-filter: blur()` — not needed for this style
+     - CSS custom properties: `--btn-shadow`, `--btn-shadow-pressed`, `--panel-shadow`
+  4. Config items + stats panels get same raised treatment
 - **Files Modified**:
-  - `Eclairs/Web/css/style.css` — Full glassmorphism rewrite
-  - `Eclairs/Web/index.html` — Cleaner structure, glass-btn classes, toolbar
-  - `Eclairs/Web/js/app.js` — `.pop` → `.pulse`, two-tap turn-off, cleaner text
-- **Design Philosophy**: "It looks like Apple made this app" — monochrome palettes, negative space, frosted glass, zero cartoon elements
+  - `Eclairs/Web/css/style.css` — Full candy-skeuomorphic rewrite
+  - `CLAUDE.md` — Design Philosophy section updated
+- **Design Reference**: "Dieter Rams × Braun hi-fi × Kubrick 1960s" — tactile, candy-like, expensive toy
 - **Status**: Ready for re-test in Xcode
 
 ### [Template] (Project Initialization)
@@ -319,11 +331,17 @@ python -m http.server 8000
 - Simple solutions first - don't over-engineer
 - Reference preservation - keep uploads as knowledge bank
 
-### Design Philosophy
-- Joyful, playful, kid-friendly
-- Light pale backgrounds + soft dark text (for contrast)
-- Cartoon 3D button - fun to press, but smaller than syllable text
-- Large tap targets for small fingers
+### Design Philosophy — "Candy Skeuomorphic"
+Reference: Splicetable UI (images in /_dropbox/). Think Dieter Rams × Braun hi-fi × Kubrick 1960s, rendered in CSS.
+- **Neo-skeuomorphic buttons**: Raised, physical-feeling, like injection-molded plastic or machined resin. NOT flat, NOT glossy
+- **Multi-layer box-shadows**: Bottom + right shadows create "lifted off surface" depth. Subtle inset highlight on top edge
+- **Crisp borders**: 1px solid in a slightly darker shade of background — sharp, not blurry glass
+- **Warm monochrome palette**: Off-white / light warm gray base. Almost no color except occasional small accent dots
+- **Moderate border-radius**: ~10-12px, not pill-shaped (not 20px+). Feels mechanical, precise
+- **Confident typography**: Small, slightly tracked, clean system fonts. Labels below or inside controls
+- **Tactile, candy-like, expensive toy**: The overall vibe. Quiet confidence. A real object you want to touch
+- **Negative space**: Generous padding, breathing room. Let the controls float
+- **Large tap targets**: Still kid-friendly despite the refined aesthetic
 
 ---
 
