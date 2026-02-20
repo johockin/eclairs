@@ -82,12 +82,38 @@ var PracticeItems = (function() {
     return cats;
   }
 
+  // Difficulty tiers: order matters (easiest first)
+  // Each tier is a list of item IDs that unlock together
+  var tiers = [
+    // Tier 0: mirror letters (easiest — just letter recognition)
+    ['b', 'd', 'p', 'q', 'm', 'n'],
+    // Tier 1: basic nasals + simple digraphs
+    ['on', 'an', 'in', 'en', 'ou', 'oi', 'ch'],
+    // Tier 2: accents + more digraphs
+    ['e_acute', 'e_grave', 'ai', 'au', 'eau', 'eu'],
+    // Tier 3: harder nasals + remaining digraphs
+    ['ain', 'ein', 'oin', 'gn', 'ui', 'e_circ'],
+    // Tier 4: consonant confusion (hardest)
+    ['c_hard', 'c_soft', 'g_hard', 'g_soft']
+  ];
+
+  function getTiers() { return tiers; }
+
+  function getTierForItem(id) {
+    for (var i = 0; i < tiers.length; i++) {
+      if (tiers[i].indexOf(id) !== -1) return i;
+    }
+    return -1;
+  }
+
   return {
     getAll: getAll,
     getDefaults: getDefaults,
     getById: getById,
     getDisplay: getDisplay,
-    getCategories: getCategories
+    getCategories: getCategories,
+    getTiers: getTiers,
+    getTierForItem: getTierForItem
   };
 })();
 

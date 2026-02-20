@@ -129,6 +129,18 @@
     // Record stats (unless paused)
     if (!statsPaused) {
       Storage.recordAttempt(currentPracticeItem, correct);
+
+      // Auto-adjust: promote/demote items based on performance
+      var result = Storage.assess();
+      if (result.demoted.length > 0) {
+        showAssessNotice('Removed: ' + result.demoted.map(function(id) {
+          return PracticeItems.getDisplay(id);
+        }).join(', ') + ' (too hard for now)');
+      } else if (result.promoted.length > 0) {
+        showAssessNotice('New: ' + result.promoted.map(function(id) {
+          return PracticeItems.getDisplay(id);
+        }).join(', '));
+      }
     }
     sessionTotal++;
     if (correct) sessionCorrect++;
@@ -159,6 +171,21 @@
       var pct = Math.round((sessionCorrect / sessionTotal) * 100);
       el.textContent = sessionCorrect + '/' + sessionTotal + ' (' + pct + '%)';
     }
+  }
+
+  // --- Assess Notice (brief toast when items auto-change) ---
+
+  var assessTimer = null;
+  function showAssessNotice(msg) {
+    var el = document.getElementById('practice-counter');
+    if (!el) return;
+    clearTimeout(assessTimer);
+    el.textContent = msg;
+    el.classList.add('assess-notice');
+    assessTimer = setTimeout(function() {
+      el.classList.remove('assess-notice');
+      updateSessionCounter();
+    }, 2500);
   }
 
   // --- Pause Stats ---
