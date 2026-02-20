@@ -146,11 +146,13 @@
     if (correct) sessionCorrect++;
     updateSessionCounter();
 
-    // Sound
+    // Sound + haptics
     if (correct) {
       SoundEngine.playCorrect();
+      Haptics.success();
     } else {
       SoundEngine.playWrong();
+      Haptics.error();
     }
 
     // Button-level feedback animation
@@ -287,6 +289,7 @@
         btn.setAttribute('data-id', item.id);
         btn.addEventListener('click', function() {
           btn.classList.toggle('selected');
+          Haptics.select();
         });
         grid.appendChild(btn);
       });
@@ -482,6 +485,7 @@
         e.stopPropagation();
         var target = btn.getAttribute('data-nav');
         if (navSounds[target]) navSounds[target]();
+        Haptics.light();
         navigate(target);
       });
     });
@@ -489,33 +493,38 @@
     // Score buttons
     document.getElementById('btn-correct').addEventListener('click', function(e) {
       e.stopPropagation();
+      Haptics.medium();
       scorePractice(true);
     });
     document.getElementById('btn-wrong').addEventListener('click', function(e) {
       e.stopPropagation();
+      Haptics.medium();
       scorePractice(false);
     });
 
     // Toolbar
     document.getElementById('btn-pause-stats').addEventListener('click', function(e) {
       e.stopPropagation();
+      Haptics.select();
       togglePauseStats();
     });
     document.getElementById('btn-turn-off').addEventListener('click', function(e) {
       e.stopPropagation();
+      Haptics.light();
       turnOffCurrentItem();
     });
 
     // Config
-    document.getElementById('btn-config-save').addEventListener('click', saveConfig);
-    document.getElementById('btn-config-reset').addEventListener('click', resetConfigDefaults);
-    document.getElementById('btn-config-all').addEventListener('click', selectAllConfig);
-    document.getElementById('btn-config-clear').addEventListener('click', clearAllConfig);
+    document.getElementById('btn-config-save').addEventListener('click', function() { Haptics.medium(); saveConfig(); });
+    document.getElementById('btn-config-reset').addEventListener('click', function() { Haptics.light(); resetConfigDefaults(); });
+    document.getElementById('btn-config-all').addEventListener('click', function() { Haptics.light(); selectAllConfig(); });
+    document.getElementById('btn-config-clear').addEventListener('click', function() { Haptics.light(); clearAllConfig(); });
 
     // Song picker (toggle: click active song to stop, click different to switch)
     document.querySelectorAll('.song-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
+        Haptics.light();
         var index = parseInt(btn.getAttribute('data-song'), 10);
         if (index === MusicEngine.getCurrentSong() && !musicOff) {
           // Toggle off
