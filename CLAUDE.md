@@ -365,6 +365,19 @@ python -m http.server 8000
   - `Eclairs/Web/css/style.css` — Song picker pill button styles (candy-skeuomorphic)
 - **Status**: Ready for testing
 
+### 2026-02-20 (App Icon: r3-le-dark selected and installed)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. User selected `r3-le-dark` as the winner — refined fat bolt + "é" on dark navy (#1A1A2E), light purple (#CE93D8), subtle glow
+  2. Generated 1024x1024 PNG via `_icons/generate-icon-grid.js`
+  3. Copied to `Eclairs/Assets.xcassets/AppIcon.appiconset/AppIcon.png`
+  4. Updated `Contents.json` to reference `AppIcon.png`
+- **Files Created**:
+  - `Eclairs/Assets.xcassets/AppIcon.appiconset/AppIcon.png` — 1024x1024 app icon
+- **Files Modified**:
+  - `Eclairs/Assets.xcassets/AppIcon.appiconset/Contents.json` — Added filename reference
+- **Status**: App icon installed, ready for Xcode build
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
