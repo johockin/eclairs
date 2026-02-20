@@ -441,6 +441,24 @@ python -m http.server 8000
   - `Eclairs/Web/js/syllables.js` — 8 new items + updated tier arrays
 - **Status**: Committed. Total practice items: 35 (was 27)
 
+### 2026-02-20 (Haptic Feedback Bridge)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Added Coordinator class with WKScriptMessageHandler to WebView.swift
+  2. Pre-instantiated all UIFeedbackGenerator types (light/medium/heavy impact, notification, selection) for zero first-fire delay
+  3. Created `haptics.js` — thin wrapper that posts messages to Swift via `window.webkit.messageHandlers.haptic`, no-ops in browser
+  4. Wired haptic calls throughout app.js: score buttons (medium), correct/wrong feedback (success/error), nav buttons (light), song picker (light), config toggles (select), toolbar buttons, config action buttons
+  5. Updated `.ralph/PROMPT.md` and `.ralph/AGENT.md` to reflect current state
+  6. Wrote comprehensive master plan to `.ralph/fix_plan.md` covering Phase 4 (haptics) and Phase 5 (numbers mode)
+- **Files Created**:
+  - `Eclairs/Web/js/haptics.js` — JS→Swift haptic bridge wrapper
+- **Files Modified**:
+  - `Eclairs/WebView.swift` — Coordinator + WKScriptMessageHandler (was 35 lines, now 94)
+  - `Eclairs/Web/js/app.js` — Haptic calls on all interactive elements
+  - `Eclairs/Web/index.html` — haptics.js script tag
+  - `.ralph/PROMPT.md`, `.ralph/AGENT.md`, `.ralph/fix_plan.md`
+- **Status**: Committed. Must test on physical device (Simulator doesn't support haptics)
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -450,7 +468,7 @@ python -m http.server 8000
 
 ## DEVELOPMENT ROADMAP
 
-### Current Status: **Phase 2** - Testing & Polish
+### Current Status: **Phase 4** - Native Bridges
 
 **See .ralph/fix_plan.md for detailed task checklist.**
 
@@ -478,9 +496,9 @@ python -m http.server 8000
 - [x] Mastery bars in stats screen
 - [ ] Session summary
 
-### Phase 4: Native Bridges
-- [ ] Haptic feedback bridge (JS → Swift Taptic Engine)
-- [ ] Migrate localStorage to UserDefaults bridge (data durability)
+### Phase 4: Native Bridges [CURRENT]
+- [x] Haptic feedback bridge (JS → Swift Taptic Engine)
+- [ ] Migrate localStorage to UserDefaults bridge (data durability) — DEFERRED
 
 ### Phase 5: Numbers Mode
 - [ ] Number generator with French difficulty tiers (1-10, 11-20, 21-69, 70-99)
@@ -600,6 +618,7 @@ CLAUDE.md (this file) ─────────────────── 
 │       └── js/
 │           ├── app.js ───────────────────── Main app logic & routing
 │           ├── syllables.js ─────────────── Syllable data + practice items
+│           ├── haptics.js ───────────────── JS→Swift haptic bridge
 │           ├── sounds.js ────────────────── Web Audio API sound effects
 │           ├── music.js ─────────────────── Background music engine
 │           └── storage.js ───────────────── localStorage stats engine
