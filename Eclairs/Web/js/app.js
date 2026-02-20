@@ -376,6 +376,17 @@
   }
 
   // ============================
+  // SONG PICKER
+  // ============================
+
+  function updateSongPicker() {
+    var current = MusicEngine.getCurrentSong();
+    document.querySelectorAll('.song-btn').forEach(function(btn) {
+      btn.classList.toggle('active', parseInt(btn.getAttribute('data-song'), 10) === current);
+    });
+  }
+
+  // ============================
   // EVENT BINDING
   // ============================
 
@@ -413,6 +424,16 @@
     document.getElementById('btn-config-reset').addEventListener('click', resetConfigDefaults);
     document.getElementById('btn-config-all').addEventListener('click', selectAllConfig);
     document.getElementById('btn-config-clear').addEventListener('click', clearAllConfig);
+
+    // Song picker
+    document.querySelectorAll('.song-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var index = parseInt(btn.getAttribute('data-song'), 10);
+        MusicEngine.setSong(index);
+        updateSongPicker();
+      });
+    });
 
     // Keyboard
     document.addEventListener('keydown', function(e) {

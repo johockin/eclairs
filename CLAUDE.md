@@ -348,6 +348,23 @@ python -m http.server 8000
   - `Eclairs/Web/js/app.js` — MusicEngine.start()/stop() in showScreen()
 - **Status**: Ready for testing
 
+### 2026-02-20 (Music Expansion: 3 Songs + CR-78 Drums + Song Picker)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Rewrote `music.js` with song data structure (array of song objects with melody/bass/drums/config)
+  2. Added CR-78 drum sounds: closed hat (tight noise + highpass), open hat (bandpass sizzle), ride cymbal (detuned oscillator ping + noise shimmer)
+  3. Song 0 "Bouncy": C major, 140 BPM, original Excite Bike vibe + CR-78 drums (open hat off-beats, ride on quarters)
+  4. Song 1 "Mellow": A minor, 118 BPM, triangle lead, descending minor arpeggios, sparser drums
+  5. Song 2 "Jazzy": G major, 115 BPM, chromatic walkdowns (Peg-inspired), swing: 0.12, busy ride on 8ths
+  6. Added song picker UI: 3 pill buttons on home screen (Bouncy/Mellow/Jazzy)
+  7. Wired song switching: click handler calls MusicEngine.setSong() with 450ms crossfade
+- **Files Modified**:
+  - `Eclairs/Web/js/music.js` — Complete rewrite: 3-song engine with CR-78 drums (468 lines)
+  - `Eclairs/Web/index.html` — Added song picker buttons in home container
+  - `Eclairs/Web/js/app.js` — Added updateSongPicker() + song button event binding
+  - `Eclairs/Web/css/style.css` — Song picker pill button styles (candy-skeuomorphic)
+- **Status**: Ready for testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
