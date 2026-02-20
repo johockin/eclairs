@@ -430,6 +430,17 @@ python -m http.server 8000
   - `Eclairs/Web/css/style.css` — mastery bar styles, assess notice styles
 - **Status**: Committed, ready for testing
 
+### 2026-02-20 (Curriculum Expansion: 8 New Phonics Items)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Gap analysis against CP-level French phonics curriculum
+  2. Added 8 new practice items: ph, ill, ç, tion, er, ez, eil, ien
+  3. Placed in difficulty tiers: ph→tier 1, er/ez/tion→tier 2, ç/ill/eil/ien→tier 3
+  4. All defaultOn: false — unlocked via auto-promotion system
+- **Files Modified**:
+  - `Eclairs/Web/js/syllables.js` — 8 new items + updated tier arrays
+- **Status**: Committed. Total practice items: 35 (was 27)
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
@@ -467,7 +478,19 @@ python -m http.server 8000
 - [x] Mastery bars in stats screen
 - [ ] Session summary
 
-### Phase 4: Release Prep
+### Phase 4: Native Bridges
+- [ ] Haptic feedback bridge (JS → Swift Taptic Engine)
+- [ ] Migrate localStorage to UserDefaults bridge (data durability)
+
+### Phase 5: Numbers Mode
+- [ ] Number generator with French difficulty tiers (1-10, 11-20, 21-69, 70-99)
+- [ ] Separate skin (warm amber/cream palette, different practice screen colors)
+- [ ] Mode switch on home screen with flip animation
+- [ ] Per-number tracking + weighted selection (reuse mastery algorithm)
+- [ ] Range-based stats display
+- [ ] New song set for numbers mode
+
+### Phase 6: Release Prep
 - [ ] App icon, launch screen
 - [ ] TestFlight build
 
