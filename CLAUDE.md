@@ -459,6 +459,15 @@ python -m http.server 8000
   - `.ralph/PROMPT.md`, `.ralph/AGENT.md`, `.ralph/fix_plan.md`
 - **Status**: Committed. Must test on physical device (Simulator doesn't support haptics)
 
+### 2026-02-20 (Fix White Bar at Bottom)
+- **Claude Instance**: Claude Opus 4
+- **Action**:
+  1. Replaced deprecated `.edgesIgnoringSafeArea(.all)` with `.ignoresSafeArea()` on ContentView
+  2. Removed redundant `.edgesIgnoringSafeArea(.all)` from EclairsApp WindowGroup
+  3. Added `scrollView.contentInsetAdjustmentBehavior = .never` to WKWebView — iOS was auto-adding insets that pushed content up
+- **Files Modified**: `ContentView.swift`, `EclairsApp.swift`, `WebView.swift`
+- **Status**: Fixed, confirmed by user
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template
