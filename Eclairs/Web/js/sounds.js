@@ -16,48 +16,42 @@ var SoundEngine = (function() {
     return ctx;
   }
 
-  // --- CORRECT SOUND: Bright satisfying chime (Mario coin style) ---
+  // --- CORRECT SOUND: Coin chime (Mario-inspired, warm and punchy) ---
   function playCorrect() {
     var c = getCtx();
     var now = c.currentTime;
 
-    // Note 1: B5
+    // Low-pass filter to tame the square wave harmonics — warm, not shrill
+    var filter = c.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 2800;
+    filter.Q.value = 0.7;
+    filter.connect(c.destination);
+
+    // Note 1: B4 (lower octave — more body)
     var osc1 = c.createOscillator();
     var gain1 = c.createGain();
-    osc1.type = 'sine';
-    osc1.frequency.value = 988;
-    gain1.gain.setValueAtTime(0.3, now);
-    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+    osc1.type = 'square';
+    osc1.frequency.value = 494;
+    gain1.gain.setValueAtTime(0.18, now);
+    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
     osc1.connect(gain1);
-    gain1.connect(c.destination);
+    gain1.connect(filter);
     osc1.start(now);
-    osc1.stop(now + 0.15);
+    osc1.stop(now + 0.13);
 
-    // Note 2: E6 (a fifth up, bright resolution)
+    // Note 2: E5 (a fourth up — satisfying pop, holds longer)
     var osc2 = c.createOscillator();
     var gain2 = c.createGain();
-    osc2.type = 'sine';
-    osc2.frequency.value = 1319;
-    gain2.gain.setValueAtTime(0, now + 0.08);
-    gain2.gain.linearRampToValueAtTime(0.35, now + 0.1);
-    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+    osc2.type = 'square';
+    osc2.frequency.value = 659;
+    gain2.gain.setValueAtTime(0.2, now + 0.07);
+    gain2.gain.setValueAtTime(0.2, now + 0.15);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
     osc2.connect(gain2);
-    gain2.connect(c.destination);
-    osc2.start(now + 0.08);
-    osc2.stop(now + 0.4);
-
-    // Sparkle overtone
-    var osc3 = c.createOscillator();
-    var gain3 = c.createGain();
-    osc3.type = 'sine';
-    osc3.frequency.value = 2637;
-    gain3.gain.setValueAtTime(0, now + 0.1);
-    gain3.gain.linearRampToValueAtTime(0.1, now + 0.12);
-    gain3.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-    osc3.connect(gain3);
-    gain3.connect(c.destination);
-    osc3.start(now + 0.1);
-    osc3.stop(now + 0.35);
+    gain2.connect(filter);
+    osc2.start(now + 0.07);
+    osc2.stop(now + 0.46);
   }
 
   // --- WRONG SOUNDS: 8 comical effects, cycled ---
