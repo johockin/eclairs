@@ -209,47 +209,62 @@ body {
   font-size: 0.95rem;
 }
 
-/* === SONG PICKER === */
+/* === SONG PICKER — Arcade Buttons === */
 .song-picker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
-  margin-top: 24px;
+  padding: 16px 24px;
+  padding-bottom: max(18px, env(safe-area-inset-bottom, 18px));
 }
 
 .song-btn {
-  padding: 6px 14px;
+  padding: 10px 16px;
+  min-width: 72px;
   font-family: inherit;
   font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   border: 1px solid var(--btn-border);
-  border-radius: 100px;
+  border-radius: 6px;
   background: var(--btn-bg);
   color: var(--text-color, var(--fg));
   cursor: pointer;
-  opacity: 0.3;
+  opacity: 0.35;
   box-shadow:
-    0 2px 0 rgba(0, 0, 0, 0.04),
-    0 1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 var(--btn-edge) 0 rgba(0, 0, 0, 0.07),
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    inset 0 2px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
   transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+  touch-action: manipulation;
 }
 .song-btn:active {
-  transform: translateY(2px);
-  box-shadow:
-    0 0 0 rgba(0, 0, 0, 0.04),
-    inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  transform: translateY(var(--btn-edge));
+  box-shadow: var(--btn-shadow-pressed);
+  opacity: 0.6;
 }
 .song-btn.active {
-  opacity: 0.7;
+  opacity: 0.85;
   background: var(--text-color, var(--fg));
   color: var(--bg-color, var(--bg));
   border-color: transparent;
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.12),
-    0 4px 10px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 var(--btn-edge) 0 rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 2px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.song-btn.active:active {
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* ===========================
@@ -635,8 +650,17 @@ body {
       inset 0 -1px 0 rgba(0, 0, 0, 0.03);
   }
   .toolbar-btn:hover { opacity: 0.4; }
-  .song-btn:hover { opacity: 0.5; }
-  .song-btn.active:hover { opacity: 0.8; }
+  .song-btn:hover {
+    opacity: 0.5;
+    box-shadow:
+      0 var(--btn-edge) 0 rgba(0, 0, 0, 0.09),
+      0 3px 8px rgba(0, 0, 0, 0.07),
+      inset 0 2px 0 rgba(255, 255, 255, 0.75),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  }
+  .song-btn.active:hover {
+    opacity: 0.9;
+  }
 }
 
 /* Focus */
