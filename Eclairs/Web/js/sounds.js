@@ -401,12 +401,138 @@ var SoundEngine = (function() {
     osc.stop(now + 0.11);
   }
 
+  // --- STREAK SOUNDS ---
+
+  // Rising tone that gets higher with streak count (plays streak 3+)
+  function playStreakTone(streak) {
+    if (streak < 3) return;
+    var c = getCtx();
+    var now = c.currentTime;
+    var freq = Math.min(300 + (streak * 40), 2000);
+    var vol = Math.min(0.032 + streak * 0.00525, 0.158);
+    var osc = c.createOscillator();
+    var gain = c.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 0.09);
+  }
+
+  // Milestone chimes — play INSTEAD of streak tone at exact thresholds
+
+  // Streak 5: Single bright ding (E5)
+  function playDing() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var osc = c.createOscillator();
+    var gain = c.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = 659; // E5
+    gain.gain.setValueAtTime(0.189, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 0.22);
+  }
+
+  // Streak 10: 3-note ascending (C5→E5→G5)
+  function playBaDaDing() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var notes = [523, 659, 784]; // C5, E5, G5
+    for (var i = 0; i < notes.length; i++) {
+      (function(freq, t) {
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.168, now + t);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + t + 0.12);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(now + t);
+        osc.stop(now + t + 0.14);
+      })(notes[i], i * 0.1);
+    }
+  }
+
+  // Streak 20: 5-note melody (C5→E5→G5→A5→C6)
+  function playMiniMelody() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var notes = [523, 659, 784, 880, 1047]; // C5, E5, G5, A5, C6
+    for (var i = 0; i < notes.length; i++) {
+      (function(freq, t) {
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.158, now + t);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + t + 0.1);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(now + t);
+        osc.stop(now + t + 0.12);
+      })(notes[i], i * 0.09);
+    }
+  }
+
+  // Streak 50+: Celebratory fanfare (8 notes with harmonics)
+  function playCelebration() {
+    var c = getCtx();
+    var now = c.currentTime;
+    var notes = [523, 659, 784, 1047, 784, 880, 1047, 1319]; // C5 E5 G5 C6 G5 A5 C6 E6
+    var vol = 0.168;
+    var filter = c.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 4000;
+    filter.connect(c.destination);
+    for (var i = 0; i < notes.length; i++) {
+      (function(freq, t) {
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(vol, now + t);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + t + 0.14);
+        osc.connect(gain);
+        gain.connect(filter);
+        osc.start(now + t);
+        osc.stop(now + t + 0.16);
+      })(notes[i], i * 0.12);
+    }
+  }
+
+  // Dispatch milestone chime by streak value
+  // Returns true if a milestone was played, false otherwise
+  function isMilestone(streak) {
+    if (streak < 5) return false;
+    if (streak <= 50) return streak % 5 === 0;
+    if (streak <= 100) return streak % 10 === 0;
+    return streak % 50 === 0;
+  }
+
+  function playMilestoneChime(streak) {
+    if (!isMilestone(streak)) return false;
+    if (streak === 5) { playDing(); return true; }
+    if (streak <= 15) { playBaDaDing(); return true; }
+    if (streak <= 45) { playMiniMelody(); return true; }
+    playCelebration(); return true;
+  }
+
   return {
     playCorrect: playCorrect,
     playWrong: playWrong,
     playMenuPractice: playMenuPractice,
     playMenuStats: playMenuStats,
     playMenuSettings: playMenuSettings,
-    playMenuBack: playMenuBack
+    playMenuBack: playMenuBack,
+    playStreakTone: playStreakTone,
+    playMilestoneChime: playMilestoneChime
   };
 })();

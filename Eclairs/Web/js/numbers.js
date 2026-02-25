@@ -1,6 +1,6 @@
 /**
  * Éclairs - Number Engine
- * French number identification mode with 7 difficulty tiers.
+ * French number identification mode with 10 decade-based difficulty tiers.
  * Parallel system to PracticeItems/Storage for phonics.
  */
 
@@ -11,16 +11,19 @@ var NumberEngine = (function() {
   // Each tier: { id, label, range: [min, max], description }
 
   var tiers = [
-    { id: 0, label: '1–10',  range: [1, 10],  description: 'Basic' },
-    { id: 1, label: '11–16', range: [11, 16], description: 'Irregular teens' },
-    { id: 2, label: '17–20', range: [17, 20], description: 'Composed teens' },
-    { id: 3, label: '21–69', range: [21, 69], description: 'Regular pattern' },
-    { id: 4, label: '70–79', range: [70, 79], description: 'Soixante-dix' },
-    { id: 5, label: '80–89', range: [80, 89], description: 'Quatre-vingts' },
-    { id: 6, label: '90–99', range: [90, 99], description: 'Quatre-vingt-dix' }
+    { id: 0, label: '1–10',  range: [1, 10],  description: 'Les bases' },
+    { id: 1, label: '11–20', range: [11, 20], description: 'Les ados' },
+    { id: 2, label: '21–30', range: [21, 30], description: 'Vingt' },
+    { id: 3, label: '31–40', range: [31, 40], description: 'Trente' },
+    { id: 4, label: '41–50', range: [41, 50], description: 'Quarante' },
+    { id: 5, label: '51–60', range: [51, 60], description: 'Cinquante' },
+    { id: 6, label: '61–69', range: [61, 69], description: 'Soixante' },
+    { id: 7, label: '70–79', range: [70, 79], description: 'Soixante-dix' },
+    { id: 8, label: '80–89', range: [80, 89], description: 'Quatre-vingts' },
+    { id: 9, label: '90–99', range: [90, 99], description: 'Quatre-vingt-dix' }
   ];
 
-  var DEFAULT_TIERS = [0, 1];
+  var DEFAULT_TIERS = [0];
 
   function getTiers() { return tiers; }
 
@@ -313,6 +316,75 @@ var NumberEngine = (function() {
     return { changed: changed, promoted: promoted, demoted: demoted };
   }
 
+  // --- Time Helpers ---
+
+  function startOfDay(date) {
+    var d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
+  }
+
+  function daysAgo(n) {
+    return Date.now() - (n * 24 * 60 * 60 * 1000);
+  }
+
+  function filterAttempts(attempts, key, since) {
+    return attempts.filter(function(a) {
+      var matchItem = !key || a.item === key;
+      var matchTime = !since || a.ts >= since;
+      return matchItem && matchTime;
+    });
+  }
+
+  function calcStats(filtered) {
+    var total = filtered.length;
+    var correct = filtered.filter(function(a) { return a.correct; }).length;
+    var pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+    var streak = 0;
+    for (var i = filtered.length - 1; i >= 0; i--) {
+      if (filtered[i].correct) streak++; else break;
+    }
+    var bestStreak = 0, currentRun = 0;
+    for (var j = 0; j < filtered.length; j++) {
+      if (filtered[j].correct) {
+        currentRun++;
+        if (currentRun > bestStreak) bestStreak = currentRun;
+      } else { currentRun = 0; }
+    }
+    return { total: total, correct: correct, pct: pct, streak: streak, bestStreak: bestStreak };
+  }
+
+  // --- Per-Number Stats (time-windowed, like phonics Storage.getStats) ---
+
+  function getStats(number) {
+    var all = getAttempts();
+    var key = number != null ? String(number) : null;
+    var now = new Date();
+    return {
+      career: calcStats(filterAttempts(all, key, null)),
+      last30: calcStats(filterAttempts(all, key, daysAgo(30))),
+      last7: calcStats(filterAttempts(all, key, daysAgo(7))),
+      today: calcStats(filterAttempts(all, key, startOfDay(now)))
+    };
+  }
+
+  // --- Tier Day Stats (for stats screen) ---
+
+  function getTierDayStats(tierIndex) {
+    var nums = getNumbersInTier(tierIndex);
+    var all = getAttempts();
+    var tierAttempts = all.filter(function(a) {
+      return nums.indexOf(parseInt(a.item, 10)) !== -1;
+    });
+    var now = new Date();
+    return {
+      career: calcStats(tierAttempts),
+      last30: calcStats(tierAttempts.filter(function(a) { return a.ts >= daysAgo(30); })),
+      last7: calcStats(tierAttempts.filter(function(a) { return a.ts >= daysAgo(7); })),
+      today: calcStats(tierAttempts.filter(function(a) { return a.ts >= startOfDay(now); }))
+    };
+  }
+
   // --- Summary Stats ---
 
   function getSummary() {
@@ -368,6 +440,8 @@ var NumberEngine = (function() {
     getMastery: getMastery,
     getTierMastery: getTierMastery,
     getTierStats: getTierStats,
+    getTierDayStats: getTierDayStats,
+    getStats: getStats,
     getNextNumber: getNextNumber,
     assess: assess,
     getSummary: getSummary,

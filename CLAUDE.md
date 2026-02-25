@@ -505,6 +505,47 @@ python -m http.server 8000
   - `Eclairs/Web/js/music.js` — 3 new songs added (Calculator, Abacus, Clockwork)
 - **Status**: Committed (`e57314d`), ready for Xcode testing
 
+### 2026-02-24 (Streaks, 10-Tier Numbers, Per-Day Tracking)
+- **Claude Instance**: Claude Opus 4.6
+- **Action**:
+  1. Replaced 7 number tiers with 10 decade-based tiers (1–10 through 90–99)
+  2. Default enabled tiers changed from [0,1] to [0] only
+  3. Added `getStats()` and `getTierDayStats()` to NumberEngine with time-window helpers (career, 30d, 7d, today)
+  4. Numbers stats screen now shows per-day columns matching phonics stats layout
+  5. Added live streak counter system: `currentStreak` tracks consecutive correct answers across both modes
+  6. Added streak sounds: `playStreakTone()` (rising pitch, streak 3+) and `playMilestoneChime()` (ding at 5, ba-da-ding at 10, mini melody at 20, celebration at 50+)
+  7. Added `#streak-display` div with escalating visual feedback: small (3-4), medium (5-9), large (20+), epic (50+)
+  8. Milestone animation: CSS `streak-pop` at 5/10/20/50 thresholds
+- **Files Modified**:
+  - `Eclairs/Web/js/numbers.js` — 10 tiers, getStats(), getTierDayStats(), time helpers
+  - `Eclairs/Web/js/sounds.js` — playStreakTone(), playMilestoneChime() (4 milestone functions)
+  - `Eclairs/Web/js/app.js` — currentStreak state, streak logic in scorePractice(), updateStreakDisplay(), reset in initPracticeMode()
+  - `Eclairs/Web/css/style.css` — streak-display styles, streak-pop/streak-ring animations
+  - `Eclairs/Web/index.html` — #streak-display div in practice screen
+- **Status**: Ready for testing
+
+### 2026-02-24 (Arcade-Style Streak Celebrations)
+- **Claude Instance**: Claude Opus 4.6
+- **Action**:
+  1. Replaced `#streak-display` div with arcade-style scoreboard (BEST/STREAK counters, monospace, top-right, always visible)
+  2. Added `#celebration-overlay` div for emoji/text/flash celebrations
+  3. Built `showCelebration(streak)` with fast-escalating tiers: 2 emojis at 5 → 25 emojis at 100+
+  4. All text in French: "5 d'affilée !", "MAGNIFIQUE !", "INCROYABLE !", "LÉGENDAIRE !!", "MYTHIQUE !!!"
+  5. Emojis get absurdly oversized: 2rem at 5 → 12rem at 100+ with 0.5x-1.5x random variation
+  6. Text escalates from 1.3rem (streak 5) to 8rem (streak 100+), takes up most of screen
+  7. Fonts change at high streaks: inherit → Trebuchet MS → Marker Felt/Comic Sans → Impact/Arial Black
+  8. Background flashes start at 20 with increasing opacity (30→40→50 hex alpha)
+  8. Best streak persists per-mode in localStorage (`eclairs_best_streak_phonics` / `eclairs_best_streak_numbers`)
+  9. Reset stats also clears best streak for that mode
+  10. Sound volume bumped ~5%: streak tones, ding, ba-da-ding, mini melody, celebration
+  11. Expanded milestone chimes: 5→ding, 10-15→ba-da-ding, 20-45→mini melody, 50+→celebration
+- **Files Modified**:
+  - `Eclairs/Web/index.html` — Streak board + celebration overlay
+  - `Eclairs/Web/css/style.css` — Scoreboard styles, celebration-float/text-pop keyframes, overlay
+  - `Eclairs/Web/js/app.js` — bestStreak persistence, updateStreakDisplay → scoreboard, showCelebration(), isMilestone()
+  - `Eclairs/Web/js/sounds.js` — 5% volume bump, expanded milestone dispatch, isMilestone()
+- **Status**: Ready for testing
+
 ### [Template] (Project Initialization)
 - **Claude Instance**: [MODEL_NAME]
 - **Action**: Initialized CLAUDE.md template

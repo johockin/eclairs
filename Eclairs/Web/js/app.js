@@ -16,6 +16,8 @@
   var statsPaused = false;
   var inputLocked = false;
   var musicOff = false;
+  var currentStreak = 0;
+  var bestStreak = 0;
 
   // --- Mode Colors ---
   var PHONICS_HOME = { bg: '#E6E6FA', text: '#4A148C' };
@@ -138,13 +140,29 @@
   // PRACTICE MODE (shared screen, branched logic)
   // ============================
 
+  function getBestStreakKey() {
+    return currentMode === 'numbers' ? 'eclairs_best_streak_numbers' : 'eclairs_best_streak_phonics';
+  }
+
+  function loadBestStreak() {
+    try { bestStreak = parseInt(localStorage.getItem(getBestStreakKey()), 10) || 0; }
+    catch(e) { bestStreak = 0; }
+  }
+
+  function saveBestStreak() {
+    try { localStorage.setItem(getBestStreakKey(), bestStreak); } catch(e) {}
+  }
+
   function initPracticeMode() {
     sessionCorrect = 0;
     sessionTotal = 0;
+    currentStreak = 0;
     inputLocked = false;
     lastColorIndex = -1;
+    loadBestStreak();
     updateSessionCounter();
     updatePauseButton();
+    updateStreakDisplay();
     showNextPracticeItem();
   }
 
@@ -259,11 +277,32 @@
     }
     sessionTotal++;
     if (correct) sessionCorrect++;
+
+    // Streak tracking
+    if (correct) {
+      currentStreak++;
+      if (currentStreak > bestStreak) {
+        bestStreak = currentStreak;
+        saveBestStreak();
+      }
+    } else {
+      currentStreak = 0;
+    }
     updateSessionCounter();
+    updateStreakDisplay();
+
+    // Celebration system
+    if (correct && isMilestone(currentStreak)) {
+      showCelebration(currentStreak);
+    }
 
     // Sound + haptics
     if (correct) {
       SoundEngine.playCorrect();
+      // Streak sounds: milestone chime OR rising tone (not both)
+      if (!SoundEngine.playMilestoneChime(currentStreak)) {
+        SoundEngine.playStreakTone(currentStreak);
+      }
       Haptics.success();
     } else {
       SoundEngine.playWrong();
@@ -303,6 +342,179 @@
       el.classList.remove('assess-notice');
       updateSessionCounter();
     }, 2500);
+  }
+
+  // --- Milestone Check ---
+
+  function isMilestone(streak) {
+    if (streak < 5) return false;
+    if (streak <= 50) return streak % 5 === 0;
+    if (streak <= 100) return streak % 10 === 0;
+    return streak % 50 === 0;
+  }
+
+  // --- Streak Scoreboard ---
+
+  function updateStreakDisplay() {
+    var bestEl = document.getElementById('streak-best-val');
+    var curEl = document.getElementById('streak-current-val');
+    if (!bestEl || !curEl) return;
+
+    bestEl.textContent = bestStreak;
+    curEl.textContent = currentStreak;
+
+    if (currentStreak >= 3) {
+      curEl.classList.add('streak-active');
+    } else {
+      curEl.classList.remove('streak-active');
+    }
+  }
+
+  // --- Celebration System ---
+
+  var celebrationTimer = null;
+  var celebrationFlashTimer = null;
+
+  function showCelebration(streak) {
+    var overlay = document.getElementById('celebration-overlay');
+    if (!overlay) return;
+
+    // Clear any previous celebration
+    clearTimeout(celebrationTimer);
+    clearInterval(celebrationFlashTimer);
+    overlay.innerHTML = '';
+    overlay.style.backgroundColor = '';
+
+    // --- Tier config: faster escalation, everything bigger ---
+    var emojiCount, emojiSize, duration, textContent, textSize, textFont, flashInterval, flashCount;
+
+    if (streak >= 100) {
+      emojiCount = 25; emojiSize = '12rem'; duration = 2500;
+      textContent = 'MYTHIQUE !!!'; textSize = '8rem';
+      textFont = 'Impact, "Arial Black", sans-serif';
+      flashInterval = 60; flashCount = 18;
+    } else if (streak >= 50) {
+      emojiCount = 20; emojiSize = '10rem'; duration = 2000;
+      textContent = 'LÉGENDAIRE !!'; textSize = '6rem';
+      textFont = '"Marker Felt", "Comic Sans MS", "Chalkboard SE", cursive';
+      flashInterval = 70; flashCount = 14;
+    } else if (streak >= 45) {
+      emojiCount = 16; emojiSize = '8rem'; duration = 1500;
+      textContent = streak + ' d\'affilée !'; textSize = '5rem';
+      textFont = '"Marker Felt", "Comic Sans MS", cursive';
+      flashInterval = 80; flashCount = 10;
+    } else if (streak >= 40) {
+      emojiCount = 14; emojiSize = '7rem'; duration = 1400;
+      textContent = 'EXTRAORDINAIRE !'; textSize = '4.5rem';
+      textFont = '"Marker Felt", "Comic Sans MS", cursive';
+      flashInterval = 90; flashCount = 8;
+    } else if (streak >= 35) {
+      emojiCount = 12; emojiSize = '6rem'; duration = 1300;
+      textContent = streak + ' d\'affilée !'; textSize = '3.5rem';
+      textFont = '"Trebuchet MS", "Gill Sans", sans-serif';
+      flashInterval = 100; flashCount = 6;
+    } else if (streak >= 30) {
+      emojiCount = 10; emojiSize = '5rem'; duration = 1200;
+      textContent = 'INCROYABLE !'; textSize = '3rem';
+      textFont = '"Trebuchet MS", "Gill Sans", sans-serif';
+      flashInterval = 110; flashCount = 5;
+    } else if (streak >= 25) {
+      emojiCount = 8; emojiSize = '4rem'; duration = 1100;
+      textContent = streak + ' d\'affilée !'; textSize = '2.5rem';
+      textFont = 'inherit';
+      flashInterval = 130; flashCount = 3;
+    } else if (streak >= 20) {
+      emojiCount = 6; emojiSize = '3.5rem'; duration = 1000;
+      textContent = 'MAGNIFIQUE !'; textSize = '2.2rem';
+      textFont = 'inherit';
+      flashInterval = 150; flashCount = 2;
+    } else if (streak >= 15) {
+      emojiCount = 5; emojiSize = '3rem'; duration = 900;
+      textContent = streak + ' d\'affilée !'; textSize = '1.8rem';
+      textFont = 'inherit';
+      flashInterval = 0; flashCount = 1;
+    } else if (streak >= 10) {
+      emojiCount = 3; emojiSize = '2.5rem'; duration = 700;
+      textContent = streak + ' d\'affilée !'; textSize = '1.5rem';
+      textFont = 'inherit';
+      flashInterval = 0; flashCount = 1;
+    } else {
+      // streak 5
+      emojiCount = 2; emojiSize = '2rem'; duration = 600;
+      textContent = streak + ' d\'affilée !'; textSize = '1.3rem';
+      textFont = 'inherit';
+      flashInterval = 0; flashCount = 0;
+    }
+
+    // Pick emojis from appropriate pool
+    var pool;
+    if (streak >= 50) pool = ['🤩', '🎊', '🥳', '🤯', '🏅', '🦄', '💎', '🌈', '👑', '🎆'];
+    else if (streak >= 35) pool = ['🚀', '💥', '🎉', '🙌', '👑', '🏆', '🔥'];
+    else if (streak >= 15) pool = ['🔥', '🎯', '💪', '⚡', '🏆'];
+    else pool = ['⭐', '✨', '💫', '🌟'];
+
+    // Spawn emojis — with escalating sizes
+    for (var i = 0; i < emojiCount; i++) {
+      var span = document.createElement('span');
+      span.className = 'celebration-emoji';
+      span.textContent = pool[Math.floor(Math.random() * pool.length)];
+      // Vary size: some normal, some huge
+      var sizeVariation = 0.5 + Math.random() * 1.0; // 0.5x to 1.5x of base
+      span.style.fontSize = 'calc(' + emojiSize + ' * ' + sizeVariation.toFixed(2) + ')';
+      span.style.left = (-5 + Math.random() * 100) + '%';
+      span.style.bottom = (-10 + Math.random() * 15) + '%';
+      span.style.animationDelay = (Math.random() * 0.4) + 's';
+      span.style.animationDuration = (0.9 + Math.random() * 0.8) + 's';
+      overlay.appendChild(span);
+    }
+
+    // Text flash — always shown now (even at 5)
+    var text = document.createElement('div');
+    text.className = 'celebration-text';
+    text.textContent = textContent;
+    text.style.fontSize = textSize;
+    if (textFont !== 'inherit') {
+      text.style.fontFamily = textFont;
+    }
+    // At 40+ the text gets extra wild styling
+    if (streak >= 50) {
+      text.style.letterSpacing = '0.05em';
+      text.style.textTransform = 'uppercase';
+      text.style.webkitTextStroke = '2px rgba(0,0,0,0.15)';
+    } else if (streak >= 40) {
+      text.style.letterSpacing = '0.03em';
+    }
+    overlay.appendChild(text);
+
+    // Background color flashes
+    if (flashCount > 0 && flashInterval > 0) {
+      var flashColors = ['#FFD54F', '#FF7043', '#AB47BC', '#42A5F5', '#66BB6A', '#FF4081'];
+      // Higher streaks = more opaque flashes
+      var flashOpacity = streak >= 50 ? '50' : streak >= 35 ? '40' : '30';
+      var flashIdx = 0;
+      var flashed = 0;
+      celebrationFlashTimer = setInterval(function() {
+        overlay.style.backgroundColor = flashColors[flashIdx % flashColors.length] + flashOpacity;
+        flashIdx++;
+        flashed++;
+        if (flashed >= flashCount * 2) {
+          clearInterval(celebrationFlashTimer);
+          overlay.style.backgroundColor = '';
+        } else {
+          setTimeout(function() { overlay.style.backgroundColor = ''; }, flashInterval / 2);
+        }
+      }, flashInterval);
+    } else if (flashCount === 1) {
+      overlay.style.backgroundColor = 'rgba(255, 213, 79, 0.15)';
+      setTimeout(function() { overlay.style.backgroundColor = ''; }, 300);
+    }
+
+    // Cleanup
+    celebrationTimer = setTimeout(function() {
+      clearInterval(celebrationFlashTimer);
+      overlay.innerHTML = '';
+      overlay.style.backgroundColor = '';
+    }, duration + 800);
   }
 
   // --- Pause Stats ---
@@ -525,7 +737,7 @@
   }
 
   function resetNumbersConfigDefaults() {
-    NumberEngine.setEnabledTiers([0, 1]);
+    NumberEngine.setEnabledTiers([0]);
     renderNumbersConfig();
   }
 
@@ -656,7 +868,7 @@
     html += '</div>';
     html += '</div>';
 
-    // Tier rows
+    // Tier rows with per-day stats
     var allTiers = NumberEngine.getTiers();
     var enabled = NumberEngine.getEnabledTiers();
 
@@ -664,24 +876,24 @@
     html += '<div class="stats-table-header">';
     html += '<span class="stats-col-item">Tier</span>';
     html += '<span class="stats-col-mastery"></span>';
-    html += '<span class="stats-col">Acc</span>';
-    html += '<span class="stats-col">Tries</span>';
+    html += '<span class="stats-col">Career</span>';
+    html += '<span class="stats-col">30d</span>';
+    html += '<span class="stats-col">7d</span>';
+    html += '<span class="stats-col">Today</span>';
     html += '</div>';
 
     allTiers.forEach(function(tier) {
       var stats = NumberEngine.getTierStats(tier.id);
+      var dayStats = NumberEngine.getTierDayStats(tier.id);
       var isLocked = enabled.indexOf(tier.id) === -1;
       html += '<div class="stats-table-row' + (isLocked ? ' stats-locked' : '') + '">';
       html += '<span class="stats-col-item stats-item-name">' + tier.label + (isLocked ? ' <small>locked</small>' : '') + '</span>';
       html += '<span class="stats-col-mastery"><span class="mastery-bar"><span class="mastery-fill' +
         (stats.mastery >= 80 ? ' mastered' : '') + '" style="width:' + stats.mastery + '%"></span></span></span>';
-      if (stats.attempts > 0) {
-        var cls = stats.pct >= 80 ? 'good' : stats.pct >= 50 ? 'mid' : 'weak';
-        html += '<span class="stats-col stats-' + cls + '">' + stats.pct + '%</span>';
-      } else {
-        html += '<span class="stats-col stats-na">—</span>';
-      }
-      html += '<span class="stats-col">' + (stats.attempts || '—') + '</span>';
+      html += renderStatCell(dayStats.career);
+      html += renderStatCell(dayStats.last30);
+      html += renderStatCell(dayStats.last7);
+      html += renderStatCell(dayStats.today);
       html += '</div>';
     });
 
@@ -729,9 +941,11 @@
 
     if (mode === 'numbers') {
       NumberEngine.clearStats();
+      try { localStorage.removeItem('eclairs_best_streak_numbers'); } catch(e) {}
       renderNumbersStats();
     } else {
       Storage.clearStats();
+      try { localStorage.removeItem('eclairs_best_streak_phonics'); } catch(e) {}
       renderStats();
     }
   }
