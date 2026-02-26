@@ -996,6 +996,7 @@
     // Mode switch
     document.getElementById('mode-switch').addEventListener('click', function(e) {
       e.stopPropagation();
+      SoundEngine.playModeSwitch();
       Haptics.medium();
       toggleMode();
     });

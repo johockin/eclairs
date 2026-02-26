@@ -524,6 +524,18 @@ python -m http.server 8000
   - `Eclairs/Web/index.html` — #streak-display div in practice screen
 - **Status**: Ready for testing
 
+### 2026-02-26 (Mode Switch: Bigger Button + Sound)
+- **Claude Instance**: Claude Opus 4.6
+- **Action**:
+  1. Enlarged mode switch button: padding 8px/22px → 12px/30px, font 0.7rem → 0.8rem
+  2. Added `playModeSwitch()` sound: rising triangle sweep (250→900→600Hz) + highpass noise whoosh
+  3. Wired sound into mode switch click handler
+- **Files Modified**:
+  - `Eclairs/Web/css/style.css` — Bigger mode switch button
+  - `Eclairs/Web/js/sounds.js` — playModeSwitch() + exported
+  - `Eclairs/Web/js/app.js` — SoundEngine.playModeSwitch() in click handler
+- **Status**: Ready for testing
+
 ### 2026-02-24 (Arcade-Style Streak Celebrations)
 - **Claude Instance**: Claude Opus 4.6
 - **Action**:

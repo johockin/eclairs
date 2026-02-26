@@ -401,6 +401,46 @@ var SoundEngine = (function() {
     osc.stop(now + 0.11);
   }
 
+  // Mode switch: Whoosh-flip — rising sweep + short noise burst (card flip feel)
+  function playModeSwitch() {
+    var c = getCtx();
+    var now = c.currentTime;
+
+    // Rising sweep
+    var osc = c.createOscillator();
+    var gain = c.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(250, now);
+    osc.frequency.exponentialRampToValueAtTime(900, now + 0.12);
+    osc.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+    gain.gain.setValueAtTime(0.14, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 0.23);
+
+    // Noise whoosh
+    var bufLen = Math.floor(c.sampleRate * 0.1);
+    var buf = c.createBuffer(1, bufLen, c.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < bufLen; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / bufLen);
+    }
+    var noise = c.createBufferSource();
+    noise.buffer = buf;
+    var hp = c.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 3000;
+    var ng = c.createGain();
+    ng.gain.setValueAtTime(0.06, now + 0.03);
+    ng.gain.exponentialRampToValueAtTime(0.01, now + 0.13);
+    noise.connect(hp);
+    hp.connect(ng);
+    ng.connect(c.destination);
+    noise.start(now + 0.03);
+  }
+
   // --- STREAK SOUNDS ---
 
   // Rising tone that gets higher with streak count (plays streak 3+)
@@ -532,6 +572,7 @@ var SoundEngine = (function() {
     playMenuStats: playMenuStats,
     playMenuSettings: playMenuSettings,
     playMenuBack: playMenuBack,
+    playModeSwitch: playModeSwitch,
     playStreakTone: playStreakTone,
     playMilestoneChime: playMilestoneChime
   };
