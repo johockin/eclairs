@@ -1,0 +1,39 @@
+Isn't She Lovely
+================
+
+Composer: Stevie Wonder
+Year: 1976 (from "Songs in the Key of Life")
+Status: COPYRIGHTED — placeholder. Purchase or borrow legally.
+
+Key: E major (original recording — but easy versions often transpose to C or G)
+Time: 4/4
+Tempo: Medium-up, around quarter note ≈ 120 bpm
+Difficulty: Advanced beginner. The chord changes use II-V-I patterns but
+            don't require complex voicings. Lots of "easy piano" versions exist.
+
+Why it's an easy win
+--------------------
+- Cyclical chord progression — the verse just loops 4 chords (Em7-A7-Dmaj7-Gmaj7
+  → in E major this becomes II-V-I-IV)
+- The melody is singable and the rhythm isn't too tricky
+- Everyone knows it. You play this at any family gathering and people smile.
+- Perfect first "real Stevie" song
+
+Where to buy/download (legal)
+-----------------------------
+- Musicnotes.com: search "Isn't She Lovely Stevie Wonder"
+  - **Easy Piano** version (~$5) — recommended for advanced beginner
+  - Piano/Vocal/Guitar version (~$6) — closer to the original
+- SheetMusicPlus.com: same
+- Hal Leonard "Stevie Wonder - Songs in the Key of Life" songbook
+- Hal Leonard "The Stevie Wonder Anthology" (covers many of his classics)
+
+Practice tips
+-------------
+1. The easy piano version in C or G is friendlier than the original E major
+2. The chord pattern repeats — once you have the verse, you have most of the song
+3. The little chromatic descending bridge ("She's so I really love her...")
+   is the hardest part. Work on it separately.
+4. The original recording has a long harmonica solo and baby noises (Stevie's
+   daughter Aisha) — don't worry about replicating those. Just play the song.
+5. Reference recording: Stevie Wonder, "Songs in the Key of Life" (1976, Tamla)

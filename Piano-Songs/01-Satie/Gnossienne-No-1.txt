@@ -1,0 +1,35 @@
+Gnossienne No. 1
+================
+
+Composer: Erik Satie
+Year: 1890
+Status: PUBLIC DOMAIN — free legal download
+
+Key: F minor (modal, no key signature in original — Satie used no time signature OR bar lines)
+Time: Free / 4/4 in modern editions
+Tempo: Lent — slow and meditative
+Difficulty: Advanced beginner. Slightly trickier than the Gymnopédies but still very accessible.
+
+Why include it
+--------------
+- Famous, atmospheric, "exotic" sound — uses the Phrygian mode
+- LH is a steady gentle ostinato (low bass + chord, same as Gymnopédies)
+- RH melody has a few more notes and ornaments than the Gymnopédies
+- Great for developing rubato — Satie wrote weird French instructions like
+  "Très perdu" (very lost) and "Postulez en vous-même" (question yourself)
+  in place of normal dynamics
+
+Where to download (free, legal)
+-------------------------------
+- IMSLP: https://imslp.org/wiki/Trois_Gnossiennes_(Satie%2C_Erik)
+  (download the "Complete Score" — has all 3 Gnossiennes)
+- Mutopia Project: https://www.mutopiaproject.org/cgibin/make-table.cgi?Composer=SatieE
+- 8notes (free PDF + MIDI): https://www.8notes.com/scores/22922.asp
+
+Practice tips
+-------------
+1. The original has NO bar lines — modern editions add them. Get an edition
+   with bar lines while you're learning, then try the original later for fun.
+2. The LH ostinato never stops — practice it until it's automatic, then add RH
+3. Take liberties with the timing. This piece breathes more than the Gymnopédies.
+4. Reference recording: Aldo Ciccolini or Anne Queffélec

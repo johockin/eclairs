@@ -1,0 +1,33 @@
+Gymnopédie No. 1
+================
+
+Composer: Erik Satie
+Year: 1888
+Status: PUBLIC DOMAIN — free legal download
+
+Key: D major (with a wandering, almost modal feel)
+Time: 3/4
+Tempo: Lent et douloureux (slow and painful) — quarter note ≈ 60 bpm
+Difficulty: Advanced beginner. Famously approachable. Slow tempo, sparse texture.
+
+Why it's a great starting piece
+-------------------------------
+- LH plays just two alternating chords per measure (a low bass note then a chord)
+- RH melody moves slowly, mostly stepwise
+- No fast passages, no hand crossings, no complex rhythms
+- The hardest thing is *playing it slowly enough* and shaping the melody musically
+
+Where to download (free, legal)
+-------------------------------
+- IMSLP: https://imslp.org/wiki/Trois_Gymnop%C3%A9dies_(Satie%2C_Erik)
+  (download the "Complete Score" — has all 3 Gymnopédies)
+- Mutopia Project: https://www.mutopiaproject.org/cgibin/make-table.cgi?Composer=SatieE
+- 8notes (free PDF + MIDI): https://www.8notes.com/scores/630.asp
+
+Practice tips
+-------------
+1. Learn LH alone first. The pattern is: low bass note (beat 1) → chord (beats 2 and 3).
+   The bass walks down the scale slowly across the piece.
+2. Use the sustain pedal lightly — change with each LH chord.
+3. Don't rush the melody. Each phrase wants to breathe.
+4. Pianist Pascal Rogé's recording is a great reference for tempo and touch.
