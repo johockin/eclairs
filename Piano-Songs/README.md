@@ -4,7 +4,7 @@ Curated for an advanced-beginner level — you can read both clefs, handle simpl
 
 ## What's in here
 
-13 pieces across 5 buckets. Each piece has its own folder with a `.txt` file containing:
+14 pieces across 6 buckets. Each piece has its own folder with a `.txt` file containing:
 - Composer + year
 - Difficulty notes
 - Legal sources to buy/download
@@ -40,6 +40,9 @@ Curated for an advanced-beginner level — you can read both clefs, handle simpl
 ### 05 — Stevie Wonder *(copyrighted — placeholders)*
 12. I Can't Help It (the *Off the Wall* one)
 13. Isn't She Lovely
+
+### 06 — Cool Jazz *(copyrighted — placeholders)*
+14. Take Five — Paul Desmond / Dave Brubeck Quartet
 
 ## Suggested learning order
 

@@ -70,6 +70,17 @@ For all four below, **iRealPro is the best resource** — it's an app ($20 one-t
 
 ---
 
+## 06 — Cool Jazz
+
+### Take Five (Paul Desmond / Dave Brubeck)
+- Ultimate Guitar: https://www.ultimate-guitar.com/search.php?search_type=title&value=take+five+brubeck
+- Chordify: https://chordify.net/search/take-five
+- LearnJazzStandards: https://www.learnjazzstandards.com/index-of-jazz-standards/take-five/
+- iRealPro: definitely in the standard jazz playlists
+- **Note**: only two chords (Ebm and Bbm7) — the chord chart is trivial. The 5/4 time is the whole challenge.
+
+---
+
 ## 05 — Stevie Wonder
 
 ### I Can't Help It (Off the Wall)
